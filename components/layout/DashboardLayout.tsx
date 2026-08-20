@@ -19,7 +19,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex h-screen bg-gradient-to-br from-cream via-white to-cream/50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Sidebar */}
       <Sidebar 
         isOpen={isMobileMenuOpen} 
@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 sm:px-6">
+        <header className="h-16 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b-2 border-gold/30 dark:border-brass/30 flex items-center justify-between px-4 sm:px-6 shadow-golden">
           {/* Mobile Menu Button */}
           <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
           
@@ -39,10 +39,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+                className="w-full pl-10 pr-4 py-2 border-2 border-brass/30 rounded-xl bg-cream/30 dark:bg-gray-700/50 text-gray-900 dark:text-gray-100 placeholder-brass/60 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gold focus:border-gold transition-all"
               />
               <svg
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-brass dark:text-brass-light"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -63,20 +63,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <ThemeToggle />
 
             {/* Notifications */}
-            <button className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+            <button className="relative p-2 text-bronze hover:text-gold dark:text-brass dark:hover:text-gold rounded-xl hover:bg-cream/50 dark:hover:bg-gray-700 transition-all shadow-sm hover:shadow-golden">
               <BellIcon className="w-6 h-6" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              <span className="absolute top-1 right-1 w-2 h-2 bg-gradient-to-br from-bronze to-gold rounded-full animate-pulse"></span>
             </button>
 
             {/* User Menu */}
-            <div className="hidden sm:flex items-center gap-3 pl-3 border-l border-gray-200 dark:border-gray-700">
+            <div className="hidden sm:flex items-center gap-3 pl-3 border-l-2 border-gold/30 dark:border-brass/30">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900 dark:text-white">Admin User</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Administrator</p>
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">Admin User</p>
+                <p className="text-xs text-bronze dark:text-brass-light uppercase tracking-wide">Administrator</p>
               </div>
               <button 
                 onClick={handleLogout}
-                className="p-1 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                className="p-1 text-bronze hover:text-gold dark:text-brass-light dark:hover:text-gold rounded-xl hover:bg-cream/50 dark:hover:bg-gray-700 transition-all transform hover:scale-110"
                 title="Logout"
               >
                 <UserCircleIcon className="w-8 h-8" />
@@ -85,11 +85,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </header>
         
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Page Content - Removed max-width for full-width table */}
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-cream/30 via-transparent to-white/50 dark:from-gray-900/50 dark:via-transparent dark:to-gray-800/50">
+          <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
             {children}
           </div>
+          
+          {/* Decorative elements */}
+          <div className="fixed top-0 right-0 w-96 h-96 bg-gradient-to-br from-gold/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
+          <div className="fixed bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-bronze/5 to-transparent rounded-full blur-3xl pointer-events-none -z-10"></div>
         </main>
       </div>
     </div>

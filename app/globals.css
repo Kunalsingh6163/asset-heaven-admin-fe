@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
-/* Dark mode setup for Tailwind v4 */
+/* Custom Color Palette */
 @theme {
   --color-*: initial;
+  
+  /* Golden Theme Colors */
+  --color-gold: #d4af37;
+  --color-gold-light: #e5c158;
+  --color-gold-dark: #b8941f;
+  
+  --color-brass: #bdb76b;
+  --color-brass-light: #d4d18c;
+  --color-brass-dark: #a5a257;
+  
+  --color-cream: #fdfbd4;
+  --color-cream-dark: #f5f3c2;
+  
+  --color-bronze: #ce8946;
+  --color-bronze-light: #e5a567;
+  --color-bronze-dark: #b87335;
+  
+  /* Gray Scale */
   --color-gray-50: oklch(98.8% 0.002 285.6);
   --color-gray-100: oklch(96.8% 0.003 285.6);
   --color-gray-200: oklch(93.1% 0.006 285.6);
@@ -39,19 +57,81 @@ button {
   cursor: pointer;
 }
 
-/* Custom scrollbar for dark mode */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-100 dark:bg-gray-800;
+  background: #fdfbd4;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1a1a1a;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-600 rounded-lg;
+  background: #d4af37;
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-500;
+  background: #b8941f;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #bdb76b;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #d4af37;
+}
+
+/* Golden gradient backgrounds */
+.golden-gradient {
+  background: linear-gradient(135deg, #d4af37 0%, #ce8946 100%);
+}
+
+.golden-gradient-light {
+  background: linear-gradient(135deg, #fdfbd4 0%, #bdb76b 100%);
+}
+
+/* Shimmer effect for premium feel */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  animation: shimmer 3s infinite;
+  background: linear-gradient(
+    to right,
+    #d4af37 0%,
+    #e5c158 20%,
+    #d4af37 40%,
+    #d4af37 100%
+  );
+  background-size: 1000px 100%;
+}
+
+/* Elegant box shadows */
+.shadow-golden {
+  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
+}
+
+.shadow-golden-lg {
+  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.35);
+}
+
+/* Premium text gradient */
+.text-gradient-golden {
+  background: linear-gradient(135deg, #d4af37 0%, #ce8946 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

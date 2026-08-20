@@ -4,6 +4,7 @@
  */
 
 export const API_CONFIG = {
+  // Using real API endpoint
   BASE_URL: 'https://mobulous-tech.vercel.app/api',
   ENDPOINTS: {
     USERS: '/users',

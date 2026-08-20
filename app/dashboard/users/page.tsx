@@ -36,17 +36,17 @@ export default function UsersPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Users Management</h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Manage all registered users - Total: {users.length}
+            <h1 className="text-3xl font-bold text-gradient-golden">Users Management</h1>
+            <p className="text-sm text-brass dark:text-brass-light mt-1 font-medium">
+              Manage all registered users - Total: <span className="text-bronze dark:text-bronze-light font-bold">{users.length}</span>
             </p>
           </div>
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors shadow-md"
+            className="flex items-center gap-2 px-6 py-3 golden-gradient disabled:opacity-60 text-white rounded-xl transition-all shadow-golden hover:shadow-golden-lg transform hover:scale-105 font-semibold"
           >
-            <svg className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
             Refresh
@@ -55,13 +55,13 @@ export default function UsersPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg">
+          <div className="p-4 bg-red-50 dark:bg-red-900/30 border-2 border-red-300 dark:border-red-800 rounded-xl backdrop-blur-sm">
             <div className="flex items-center gap-3">
-              <svg className="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div>
-                <p className="font-medium text-red-800 dark:text-red-200">Error</p>
+                <p className="font-bold text-red-800 dark:text-red-200">Error</p>
                 <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
               </div>
             </div>
@@ -69,7 +69,7 @@ export default function UsersPage() {
         )}
 
         {/* Users Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl shadow-golden-lg border-2 border-gold/20 dark:border-brass/20 overflow-hidden">
           <UserTable
             users={users}
             onViewDetails={handleViewDetails}
