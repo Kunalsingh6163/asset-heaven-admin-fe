@@ -129,7 +129,8 @@ class UserService {
    */
   async deleteUser(id: string): Promise<void> {
     try {
-      const url = `${API_CONFIG.ENDPOINTS.USER_BY_ID(id)}`;
+      const url = `${API_CONFIG.ENDPOINTS.DELETE_USER(id)}`;
+      console.log('Deleting user from:', API_CONFIG.BASE_URL + url);
       
       await apiClient.delete(url);
     } catch (error) {

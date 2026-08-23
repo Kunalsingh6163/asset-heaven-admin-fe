@@ -1,14 +1,40 @@
 /**
  * API Configuration
  * Centralized API configuration for the application
+ * 
+ * The API base URL is read from environment variables:
+ * - NEXT_PUBLIC_API_URL: Set this in .env.local for your environment
+ * - Defaults to production URL if not set
+ * 
+ * To switch between localhost and deployed API:
+ * 1. Copy .env.example to .env.local
+ * 2. Update NEXT_PUBLIC_API_URL in .env.local
+ * 3. Restart the dev server
  */
 
+// Get API URL from environment variable or use production as fallback
+const getApiBaseUrl = (): string => {
+  // Check if we're in browser or server
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (envUrl) {
+    console.log('🌐 Using API URL from environment:', envUrl);
+    return envUrl;
+  }
+  
+  // Fallback to production URL
+  const fallbackUrl = 'https://mobulous-tech.vercel.app/api';
+  console.warn('⚠️ NEXT_PUBLIC_API_URL not set, using fallback:', fallbackUrl);
+  return fallbackUrl;
+};
+
 export const API_CONFIG = {
-  // Using real API endpoint
-  BASE_URL: 'https://mobulous-tech.vercel.app/api',
+  // Dynamic base URL from environment
+  BASE_URL: getApiBaseUrl(),
   ENDPOINTS: {
-    USERS: '/users',
-    USER_BY_ID: (id: string) => `/users/${id}`,
+    USERS: '/admin/users',
+    USER_BY_ID: (id: string) => `/admin/users/${id}`,
+    DELETE_USER: (id: string) => `/admin/users/${id}`,
   },
   HEADERS: {
     'Content-Type': 'application/json',

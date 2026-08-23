@@ -34,6 +34,18 @@ export const fetchUserById = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  'users/deleteUser',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await userService.deleteUser(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete user');
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -72,6 +84,22 @@ const usersSlice = createSlice({
         state.selectedUser = action.payload;
       })
       .addCase(fetchUserById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    // Delete user
+    builder
+      .addCase(deleteUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+        state.loading = false;
+        // Remove the deleted user from the users array
+        state.users = state.users.filter(user => user._id !== action.payload);
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

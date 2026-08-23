@@ -6,12 +6,29 @@ Your Asset Heaven Admin Panel now integrates with the **real API** using **Axios
 
 ## 🔗 API Details
 
-### Base URL
-```
-https://mobulous-tech.vercel.app/api
+### Base URL Configuration
+The API base URL is **configurable via environment variables**, allowing you to easily switch between:
+- **Production API**: `https://mobulous-tech.vercel.app/api`
+- **Local Development**: `http://localhost:3001/api` (or your local port)
+
+#### Quick Setup:
+1. Copy `.env.example` to `.env.local`
+2. Update `NEXT_PUBLIC_API_URL` to your desired endpoint
+3. Restart the dev server
+
+```bash
+# In .env.local
+
+# For production (deployed API):
+NEXT_PUBLIC_API_URL=https://mobulous-tech.vercel.app/api
+
+# For local development:
+# NEXT_PUBLIC_API_URL=http://localhost:3001/api
 ```
 
-### Endpoint
+**Note**: The app will automatically use the production URL if no environment variable is set.
+
+### Current Endpoint
 ```http
 GET /users
 ```
@@ -45,8 +62,11 @@ npm install axios
 ## 🎯 What Was Changed
 
 ### 1. **API Configuration** (`services/api/config.ts`)
-- Changed BASE_URL to real API: `https://mobulous-tech.vercel.app/api`
-- Configured for production use
+- **Environment-based configuration** using `NEXT_PUBLIC_API_URL`
+- Supports both localhost and deployed API
+- Automatic fallback to production URL
+- Console logging for debugging
+- Easy switching via `.env.local` file
 
 ### 2. **User Service** (`services/api/userService.ts`)
 - **Complete rewrite using Axios**
@@ -167,10 +187,28 @@ const stats = {
 
 ## 🔧 Axios Configuration
 
+### Dynamic Base URL:
+```typescript
+// Reads from NEXT_PUBLIC_API_URL environment variable
+const getApiBaseUrl = (): string => {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (envUrl) {
+    console.log('🌐 Using API URL from environment:', envUrl);
+    return envUrl;
+  }
+  
+  // Fallback to production
+  const fallbackUrl = 'https://mobulous-tech.vercel.app/api';
+  console.warn('⚠️ NEXT_PUBLIC_API_URL not set, using fallback:', fallbackUrl);
+  return fallbackUrl;
+};
+```
+
 ### Instance Setup:
 ```typescript
 const apiClient = axios.create({
-  baseURL: 'https://mobulous-tech.vercel.app/api',
+  baseURL: getApiBaseUrl(), // Dynamic from environment
   headers: { 'Content-Type': 'application/json' },
   timeout: 30000, // 30 seconds
 });
@@ -211,6 +249,31 @@ apiClient.interceptors.response.use(
 - ✅ DELETE user
 
 ## 📱 Usage Examples
+
+### Environment Configuration:
+
+#### Switching to Localhost:
+1. Open `.env.local` file
+2. Comment the production URL and uncomment localhost:
+   ```env
+   # NEXT_PUBLIC_API_URL=https://mobulous-tech.vercel.app/api
+   NEXT_PUBLIC_API_URL=http://localhost:3001/api
+   ```
+3. Restart the dev server: `npm run dev`
+4. Check browser console for: `🌐 Using API URL from environment: http://localhost:3001/api`
+
+#### Switching to Production:
+1. Open `.env.local` file
+2. Uncomment the production URL:
+   ```env
+   NEXT_PUBLIC_API_URL=https://mobulous-tech.vercel.app/api
+   # NEXT_PUBLIC_API_URL=http://localhost:3001/api
+   ```
+3. Restart the dev server
+4. Check browser console for: `🌐 Using API URL from environment: https://mobulous-tech.vercel.app/api`
+
+#### Verify Current Configuration:
+Open browser console and look for the log message showing which API URL is being used.
 
 ### Fetch All Users:
 ```typescript

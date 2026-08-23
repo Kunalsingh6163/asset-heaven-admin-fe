@@ -4,34 +4,31 @@
 @theme {
   --color-*: initial;
   
-  /* Golden Theme Colors */
-  --color-gold: #d4af37;
-  --color-gold-light: #e5c158;
-  --color-gold-dark: #b8941f;
+  /* Vibrant Theme Colors */
+  --color-lime: #b5f55b;
+  --color-lime-light: #d4ff9f;
+  --color-lime-dark: #9dd84a;
   
-  --color-brass: #bdb76b;
-  --color-brass-light: #d4d18c;
-  --color-brass-dark: #a5a257;
+  --color-pink: #ff427b;
+  --color-pink-light: #ff7aa1;
+  --color-pink-dark: #e63366;
   
-  --color-cream: #fdfbd4;
-  --color-cream-dark: #f5f3c2;
-  
-  --color-bronze: #ce8946;
-  --color-bronze-light: #e5a567;
-  --color-bronze-dark: #b87335;
+  --color-light-gray: #f5f5f5;
+  --color-lighter-gray: #fafafa;
+  --color-border-gray: #e0e0e0;
   
   /* Gray Scale */
-  --color-gray-50: oklch(98.8% 0.002 285.6);
-  --color-gray-100: oklch(96.8% 0.003 285.6);
-  --color-gray-200: oklch(93.1% 0.006 285.6);
-  --color-gray-300: oklch(87.6% 0.009 285.6);
-  --color-gray-400: oklch(72.1% 0.013 285.6);
-  --color-gray-500: oklch(57.4% 0.016 285.6);
-  --color-gray-600: oklch(44.8% 0.018 285.6);
-  --color-gray-700: oklch(36.4% 0.018 285.6);
-  --color-gray-800: oklch(26.9% 0.014 285.6);
-  --color-gray-900: oklch(19.1% 0.010 285.6);
-  --color-gray-950: oklch(13.1% 0.007 285.6);
+  --color-gray-50: #fafafa;
+  --color-gray-100: #f5f5f5;
+  --color-gray-200: #e0e0e0;
+  --color-gray-300: #d0d0d0;
+  --color-gray-400: #a0a0a0;
+  --color-gray-500: #808080;
+  --color-gray-600: #606060;
+  --color-gray-700: #404040;
+  --color-gray-800: #2d2d2d;
+  --color-gray-900: #1a1a1a;
+  --color-gray-950: #0d0d0d;
 }
 
 * {
@@ -45,6 +42,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
 }
 
 button,
@@ -64,40 +62,32 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #fdfbd4;
-}
-
-.dark ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #fafafa;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4af37;
+  background: #b5f55b;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b8941f;
+  background: #9dd84a;
 }
 
-.dark ::-webkit-scrollbar-thumb {
-  background: #bdb76b;
+/* Vibrant gradient backgrounds */
+.vibrant-gradient {
+  background: linear-gradient(135deg, #b5f55b 0%, #ff427b 100%);
 }
 
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: #d4af37;
+.lime-gradient {
+  background: linear-gradient(135deg, #9dd84a 0%, #b5f55b 100%);
 }
 
-/* Golden gradient backgrounds */
-.golden-gradient {
-  background: linear-gradient(135deg, #d4af37 0%, #ce8946 100%);
+.pink-gradient {
+  background: linear-gradient(135deg, #ff427b 0%, #e63366 100%);
 }
 
-.golden-gradient-light {
-  background: linear-gradient(135deg, #fdfbd4 0%, #bdb76b 100%);
-}
-
-/* Shimmer effect for premium feel */
+/* Shimmer effect */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
@@ -111,26 +101,56 @@ button {
   animation: shimmer 3s infinite;
   background: linear-gradient(
     to right,
-    #d4af37 0%,
-    #e5c158 20%,
-    #d4af37 40%,
-    #d4af37 100%
+    #b5f55b 0%,
+    #d4ff9f 20%,
+    #b5f55b 40%,
+    #b5f55b 100%
   );
   background-size: 1000px 100%;
 }
 
-/* Elegant box shadows */
-.shadow-golden {
-  box-shadow: 0 4px 20px rgba(212, 175, 55, 0.25);
+/* Box shadows */
+.shadow-lime {
+  box-shadow: 0 4px 20px rgba(181, 245, 91, 0.3);
 }
 
-.shadow-golden-lg {
-  box-shadow: 0 10px 40px rgba(212, 175, 55, 0.35);
+.shadow-lime-lg {
+  box-shadow: 0 10px 40px rgba(181, 245, 91, 0.4);
 }
 
-/* Premium text gradient */
-.text-gradient-golden {
-  background: linear-gradient(135deg, #d4af37 0%, #ce8946 100%);
+.shadow-pink {
+  box-shadow: 0 4px 20px rgba(255, 66, 123, 0.3);
+}
+
+.shadow-pink-lg {
+  box-shadow: 0 10px 40px rgba(255, 66, 123, 0.4);
+}
+
+.shadow-vibrant {
+  box-shadow: 0 4px 20px rgba(181, 245, 91, 0.2), 0 4px 20px rgba(255, 66, 123, 0.2);
+}
+
+.shadow-vibrant-lg {
+  box-shadow: 0 10px 40px rgba(181, 245, 91, 0.3), 0 10px 40px rgba(255, 66, 123, 0.3);
+}
+
+/* Text gradient */
+.text-gradient-vibrant {
+  background: linear-gradient(135deg, #b5f55b 0%, #ff427b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-lime {
+  background: linear-gradient(135deg, #9dd84a 0%, #b5f55b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-gradient-pink {
+  background: linear-gradient(135deg, #ff427b 0%, #e63366 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

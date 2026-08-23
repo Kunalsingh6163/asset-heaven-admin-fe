@@ -5,14 +5,15 @@ import { User } from '@/types/user.types';
 interface UserTableProps {
   users: User[];
   onViewDetails: (userId: string) => void;
+  onDeleteUser: (userId: string) => void;
   loading?: boolean;
 }
 
-export default function UserTable({ users, onViewDetails, loading = false }: UserTableProps) {
+export default function UserTable({ users, onViewDetails, onDeleteUser, loading = false }: UserTableProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-gold border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-lime border-t-transparent"></div>
       </div>
     );
   }
@@ -20,7 +21,7 @@ export default function UserTable({ users, onViewDetails, loading = false }: Use
   if (users.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-brass dark:text-brass-light font-medium">No users found</p>
+        <p className="text-gray-600 font-medium">No users found</p>
       </div>
     );
   }
@@ -39,13 +40,13 @@ export default function UserTable({ users, onViewDetails, loading = false }: Use
   const getVerificationBadge = (verified: boolean) => {
     if (verified) {
       return (
-        <span className="px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-300 dark:border-green-700">
+        <span className="px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800 border border-green-300">
           Verified
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 text-xs font-bold rounded-full bg-brass/20 text-brass-dark dark:bg-brass/10 dark:text-brass-light border border-brass/40 dark:border-brass/30">
+      <span className="px-3 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-700 border border-gray-300">
         Not Verified
       </span>
     );
@@ -54,67 +55,67 @@ export default function UserTable({ users, onViewDetails, loading = false }: Use
   const getAdminBadge = (isAdmin: boolean) => {
     if (isAdmin) {
       return (
-        <span className="px-3 py-1 text-xs font-bold rounded-full bg-gold/20 text-gold-dark dark:bg-gold/10 dark:text-gold-light border border-gold/40 dark:border-gold/30">
+        <span className="px-3 py-1 text-xs font-bold rounded-full bg-pink/20 text-pink-dark border border-pink/40">
           Admin
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600">
+      <span className="px-3 py-1 text-xs font-bold rounded-full bg-lime/20 text-lime-dark border border-lime/40">
           User
         </span>
     );
   };
 
   return (
-    <div className="overflow-x-auto rounded-xl border-2 border-gold/20 dark:border-brass/20">
-      <table className="min-w-full divide-y-2 divide-gold/20 dark:divide-brass/20">
-        <thead className="bg-gradient-to-r from-cream/50 to-white dark:from-gray-800 dark:to-gray-800/50">
+    <div className="overflow-x-auto rounded-xl border-2 border-lime/20">
+      <table className="min-w-full divide-y-2 divide-lime/20">
+        <thead className="bg-gradient-to-r from-gray-50 to-white">
           <tr>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               #
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Name
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Email
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Auth Method
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Email Verified
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Role
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Created At
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-bronze dark:text-brass-light uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm divide-y divide-gold/10 dark:divide-brass/10">
+        <tbody className="bg-white divide-y divide-gray-100">
           {users.map((user, index) => (
-            <tr key={user._id} className="hover:bg-cream/40 dark:hover:bg-gray-800/60 transition-all">
+            <tr key={user._id} className="hover:bg-gray-50 transition-all">
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-base font-bold text-gold dark:text-gold-light">
+                <div className="text-base font-bold text-gradient-vibrant">
                   {index + 1}
                 </div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-base font-semibold text-gray-900 dark:text-gray-100">
+                <div className="text-base font-semibold text-gray-900">
                   {user.name}
                 </div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-brass-dark dark:text-brass-light">{user.email}</div>
+                <div className="text-sm text-gray-600">{user.email}</div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-gray-900 dark:text-gray-100 capitalize font-medium">
+                <div className="text-sm text-gray-900 capitalize font-medium">
                   {user.lastLoginMethod.replace('_', ' ')}
                 </div>
               </td>
@@ -125,17 +126,37 @@ export default function UserTable({ users, onViewDetails, loading = false }: Use
                 {getAdminBadge(user.admin)}
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-brass-dark dark:text-brass-light">
+                <div className="text-sm text-gray-600">
                   {formatDate(user.createdAt)}
                 </div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap text-sm">
-                <button
-                  onClick={() => onViewDetails(user._id)}
-                  className="text-bronze hover:text-gold dark:text-brass-light dark:hover:text-gold font-bold transition-all px-4 py-2 rounded-lg hover:bg-cream/50 dark:hover:bg-gray-700/50 border border-bronze/30 dark:border-brass/30 hover:border-gold dark:hover:border-gold"
-                >
-                  View Details
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => onViewDetails(user._id)}
+                    className="text-pink hover:text-pink-dark font-bold transition-all px-4 py-2 rounded-lg hover:bg-pink/10 border border-pink/30 hover:border-pink"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    onClick={() => onDeleteUser(user._id)}
+                    className="text-red-600 hover:text-red-800 font-bold transition-all p-2 rounded-lg hover:bg-red-50 border border-red-300 hover:border-red-600"
+                    title="Delete User"
+                  >
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      className="h-5 w-5" 
+                      viewBox="0 0 20 20" 
+                      fill="currentColor"
+                    >
+                      <path 
+                        fillRule="evenodd" 
+                        d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" 
+                        clipRule="evenodd" 
+                      />
+                    </svg>
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

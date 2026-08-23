@@ -44,30 +44,30 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <aside 
         className={`
           fixed lg:sticky top-0 left-0 z-50 lg:z-0
-          w-64 bg-gradient-to-b from-cream via-white to-cream dark:from-gray-900 dark:via-gray-800 dark:to-gray-900
-          border-r-2 border-gold/30 dark:border-brass/30
+          w-64 bg-white
+          border-r-2 border-gray-200
           flex flex-col h-screen
           transition-transform duration-300 ease-in-out
-          shadow-golden-lg
+          shadow-lg
           ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b-2 border-gold/30 dark:border-brass/30 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+        <div className="h-16 flex items-center justify-between px-6 border-b-2 border-gray-200 bg-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 golden-gradient rounded-lg flex items-center justify-center shadow-golden transform hover:scale-105 transition-transform">
+            <div className="w-10 h-10 vibrant-gradient rounded-lg flex items-center justify-center shadow-vibrant transform hover:scale-105 transition-transform">
               <span className="text-white font-bold text-lg">AH</span>
             </div>
             <div>
-              <span className="text-lg font-bold text-gradient-golden block">Asset Heaven</span>
-              <span className="text-[10px] text-brass dark:text-brass-light uppercase tracking-wider">Admin Portal</span>
+              <span className="text-lg font-bold text-gradient-vibrant block">Asset Heaven</span>
+              <span className="text-[10px] text-gray-600 uppercase tracking-wider">Admin Portal</span>
             </div>
           </div>
           
           {/* Close button for mobile */}
           <button
             onClick={onClose}
-            className="lg:hidden p-2 text-bronze hover:text-gold rounded-lg hover:bg-cream/50 dark:hover:bg-gray-700 transition-all"
+            className="lg:hidden p-2 text-gray-600 hover:text-pink rounded-lg hover:bg-gray-100 transition-all"
           >
             <XMarkIcon className="w-5 h-5" />
           </button>
@@ -87,8 +87,8 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 className={`
                   group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive 
-                    ? 'golden-gradient text-white shadow-golden font-semibold transform scale-[1.02]' 
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-cream/70 dark:hover:bg-gray-700/70 hover:text-gold dark:hover:text-gold hover:pl-5'
+                    ? 'vibrant-gradient text-white shadow-vibrant font-semibold transform scale-[1.02]' 
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-pink hover:pl-5'
                   }
                 `}
               >
@@ -103,22 +103,22 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </nav>
 
         {/* Settings at bottom */}
-        <div className="p-4 border-t-2 border-gold/30 dark:border-brass/30 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+        <div className="p-4 border-t-2 border-gray-200 bg-white">
           <Link
             href="/dashboard/settings"
             onClick={onClose}
-            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-cream/70 dark:hover:bg-gray-700/70 hover:text-bronze dark:hover:text-bronze transition-all hover:pl-5"
+            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 hover:text-lime transition-all hover:pl-5"
           >
             <Cog6ToothIcon className="w-5 h-5 transition-transform group-hover:rotate-90 duration-300" />
             <span className="font-medium">Settings</span>
           </Link>
           
           {/* Decorative element */}
-          <div className="mt-4 pt-4 border-t border-gold/20 dark:border-brass/20">
+          <div className="mt-4 pt-4 border-t border-gray-200">
             <div className="flex items-center justify-center gap-2">
-              <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
-              <div className="w-2 h-2 rounded-full bg-gold"></div>
-              <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-gold to-transparent"></div>
+              <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-lime to-transparent"></div>
+              <div className="w-2 h-2 rounded-full bg-pink"></div>
+              <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-pink to-transparent"></div>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@ export function MobileMenuButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="lg:hidden p-2 text-bronze hover:text-gold rounded-lg hover:bg-cream/50 dark:hover:bg-gray-700 transition-all shadow-md hover:shadow-golden"
+      className="lg:hidden p-2 text-gray-600 hover:text-pink rounded-lg hover:bg-gray-100 transition-all shadow-md hover:shadow-pink"
     >
       <Bars3Icon className="w-6 h-6" />
     </button>
