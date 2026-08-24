@@ -138,6 +138,30 @@ class UserService {
       throw error;
     }
   }
+
+  /**
+   * Search users by name or email
+   * NOTE: Update this method with your actual search API endpoint when available
+   */
+  async searchUsers(query: string): Promise<User[]> {
+    try {
+      // TODO: Replace with your actual search API endpoint
+      // Example: const url = `/users/search?q=${encodeURIComponent(query)}`;
+      // For now, this is a placeholder that falls back to getAllUsers
+      
+      console.log('Search query:', query);
+      
+      // Placeholder: When you provide the search API, replace this entire block
+      // with the actual API call, something like:
+      // const response = await apiClient.get(`/users/search?q=${encodeURIComponent(query)}`);
+      // return response.data.data || response.data;
+      
+      throw new Error('Search API endpoint not configured yet. Please provide the search API details.');
+    } catch (error) {
+      console.error('Error searching users:', error);
+      throw error;
+    }
+  }
 }
 
 export const userService = new UserService();

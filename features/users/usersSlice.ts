@@ -46,6 +46,18 @@ export const deleteUser = createAsyncThunk(
   }
 );
 
+export const searchUsers = createAsyncThunk(
+  'users/searchUsers',
+  async (query: string, { rejectWithValue }) => {
+    try {
+      const users = await userService.searchUsers(query);
+      return users;
+    } catch (error) {
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to search users');
+    }
+  }
+);
+
 const usersSlice = createSlice({
   name: 'users',
   initialState,
@@ -100,6 +112,21 @@ const usersSlice = createSlice({
         state.users = state.users.filter(user => user._id !== action.payload);
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+
+    // Search users
+    builder
+      .addCase(searchUsers.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
+        state.loading = false;
+        state.users = action.payload;
+      })
+      .addCase(searchUsers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
