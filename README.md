@@ -40,10 +40,15 @@ npm run start
 
 ## API contract
 
-- `POST /api/login-user` accepts `{ email, password }` and returns `data.accessToken` plus `data.user`.
-- `GET /api/users` receives `Authorization: Bearer <accessToken>` and is protected by the backend’s admin middleware.
+- `POST /api/admin/login` accepts `{ email, password }` and returns an admin access token.
+- Password recovery uses `POST /api/admin/forgot-password`, `POST /api/admin/verify-otp`, and `POST /api/admin/reset-password`.
+- All admin user routes receive `Authorization: Bearer <accessToken>` and are protected by the backend's admin middleware:
+  - `GET /api/admin/users`
+  - `GET /api/admin/users/:_id`
+  - `DELETE /api/admin/users/:_id` (soft delete)
+  - `DELETE /api/admin/users/:_id/permanent` (permanent delete)
 
-The backend currently returns the full users list. Search, verification filtering, and page controls are performed in the frontend until server-side pagination is added.
+The shared Axios instance attaches the current session token to each protected request and presents backend error messages in the interface. The backend currently returns the full users list; search and verification filtering are performed in the frontend until server-side pagination is added.
 
 ## Production notes
 

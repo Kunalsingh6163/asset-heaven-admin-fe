@@ -4,11 +4,12 @@ import { User } from '@/types/user.types';
 
 interface UserDetailsModalProps {
   user: User | null;
+  loading?: boolean;
+  error?: string | null;
   onClose: () => void;
 }
 
-export default function UserDetailsModal({ user, onClose }: UserDetailsModalProps) {
-  if (!user) return null;
+export default function UserDetailsModal({ user, loading = false, error = null, onClose }: UserDetailsModalProps) {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -50,6 +51,22 @@ export default function UserDetailsModal({ user, onClose }: UserDetailsModalProp
         </div>
 
         <div className="p-6 space-y-6">
+          {loading && (
+            <div className="flex items-center justify-center gap-3 py-12 text-gray-600">
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-lime border-t-transparent" />
+              <span className="font-medium">Loading user details…</span>
+            </div>
+          )}
+
+          {!loading && error && !user && (
+            <div className="rounded-xl border-2 border-red-300 bg-red-50 p-4 text-red-800">
+              <p className="font-bold">Unable to load user details</p>
+              <p className="mt-1 text-sm">{error}</p>
+            </div>
+          )}
+
+          {!loading && user && (
+            <>
           {/* User ID */}
           <div className="bg-gradient-to-r from-gray-50 to-transparent p-4 rounded-xl border border-gray-200">
             <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">
@@ -204,6 +221,8 @@ export default function UserDetailsModal({ user, onClose }: UserDetailsModalProp
               </div>
             </div>
           </div>
+            </>
+          )}
         </div>
 
         <div className="p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-transparent sticky bottom-0">

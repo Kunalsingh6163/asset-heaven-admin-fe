@@ -32,9 +32,14 @@ export const API_CONFIG = {
   // Dynamic base URL from environment
   BASE_URL: getApiBaseUrl(),
   ENDPOINTS: {
+    ADMIN_LOGIN: '/admin/login',
+    ADMIN_FORGOT_PASSWORD: '/admin/forgot-password',
+    ADMIN_VERIFY_OTP: '/admin/verify-otp',
+    ADMIN_RESET_PASSWORD: '/admin/reset-password',
     USERS: '/admin/users',
     USER_BY_ID: (id: string) => `/admin/users/${id}`,
-    DELETE_USER: (id: string) => `/admin/users/${id}`,
+    SOFT_DELETE_USER: (id: string) => `/admin/users/${id}`,
+    PERMANENT_DELETE_USER: (id: string) => `/admin/users/${id}/permanent`,
   },
   HEADERS: {
     'Content-Type': 'application/json',

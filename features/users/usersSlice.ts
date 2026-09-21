@@ -6,6 +6,8 @@ const initialState: UsersState = {
   users: [],
   selectedUser: null,
   loading: false,
+  detailsLoading: false,
+  deletingUserId: null,
   error: null,
 };
 
@@ -34,26 +36,26 @@ export const fetchUserById = createAsyncThunk(
   }
 );
 
-export const deleteUser = createAsyncThunk(
-  'users/deleteUser',
+export const softDeleteUser = createAsyncThunk(
+  'users/softDeleteUser',
   async (id: string, { rejectWithValue }) => {
     try {
-      await userService.deleteUser(id);
+      await userService.softDeleteUser(id);
       return id;
     } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to delete user');
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to soft-delete user');
     }
   }
 );
 
-export const searchUsers = createAsyncThunk(
-  'users/searchUsers',
-  async (query: string, { rejectWithValue }) => {
+export const permanentlyDeleteUser = createAsyncThunk(
+  'users/permanentlyDeleteUser',
+  async (id: string, { rejectWithValue }) => {
     try {
-      const users = await userService.searchUsers(query);
-      return users;
+      await userService.permanentlyDeleteUser(id);
+      return id;
     } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Failed to search users');
+      return rejectWithValue(error instanceof Error ? error.message : 'Failed to permanently delete user');
     }
   }
 );
@@ -88,46 +90,48 @@ const usersSlice = createSlice({
     // Fetch user by ID
     builder
       .addCase(fetchUserById.pending, (state) => {
-        state.loading = true;
+        state.detailsLoading = true;
         state.error = null;
+        state.selectedUser = null;
       })
       .addCase(fetchUserById.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
+        state.detailsLoading = false;
         state.selectedUser = action.payload;
       })
       .addCase(fetchUserById.rejected, (state, action) => {
-        state.loading = false;
+        state.detailsLoading = false;
         state.error = action.payload as string;
       });
 
-    // Delete user
+    // Soft delete user
     builder
-      .addCase(deleteUser.pending, (state) => {
-        state.loading = true;
+      .addCase(softDeleteUser.pending, (state, action) => {
+        state.deletingUserId = action.meta.arg;
         state.error = null;
       })
-      .addCase(deleteUser.fulfilled, (state, action: PayloadAction<string>) => {
-        state.loading = false;
-        // Remove the deleted user from the users array
+      .addCase(softDeleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+        state.deletingUserId = null;
         state.users = state.users.filter(user => user._id !== action.payload);
+        if (state.selectedUser?._id === action.payload) state.selectedUser = null;
       })
-      .addCase(deleteUser.rejected, (state, action) => {
-        state.loading = false;
+      .addCase(softDeleteUser.rejected, (state, action) => {
+        state.deletingUserId = null;
         state.error = action.payload as string;
       });
 
-    // Search users
+    // Permanent delete user
     builder
-      .addCase(searchUsers.pending, (state) => {
-        state.loading = true;
+      .addCase(permanentlyDeleteUser.pending, (state, action) => {
+        state.deletingUserId = action.meta.arg;
         state.error = null;
       })
-      .addCase(searchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
-        state.loading = false;
-        state.users = action.payload;
+      .addCase(permanentlyDeleteUser.fulfilled, (state, action: PayloadAction<string>) => {
+        state.deletingUserId = null;
+        state.users = state.users.filter(user => user._id !== action.payload);
+        if (state.selectedUser?._id === action.payload) state.selectedUser = null;
       })
-      .addCase(searchUsers.rejected, (state, action) => {
-        state.loading = false;
+      .addCase(permanentlyDeleteUser.rejected, (state, action) => {
+        state.deletingUserId = null;
         state.error = action.payload as string;
       });
   },

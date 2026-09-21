@@ -1,166 +1,48 @@
-import axios, { AxiosError } from 'axios';
-import { User, CreateUserPayload, UpdateUserPayload } from '@/types/user.types';
-import { API_CONFIG, HTTP_METHODS, getErrorMessage } from './config';
+import { User } from '@/types/user.types';
+import { apiClient } from './apiClient';
+import { API_CONFIG } from './config';
 
-// Create axios instance with default config
-const apiClient = axios.create({
-  baseURL: API_CONFIG.BASE_URL,
-  headers: API_CONFIG.HEADERS,
-  timeout: 30000, // 30 seconds
-});
+type ApiEnvelope<T> = {
+  data?: T;
+};
 
-// Response interceptor for error handling
-apiClient.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) => {
-    console.error('API Error:', error);
-    
-    if (error.response) {
-      // Server responded with error status
-      const message = getErrorMessage(error.response.status);
-      throw new Error(message);
-    } else if (error.request) {
-      // Request made but no response
-      throw new Error('No response from server. Please check your connection.');
-    } else {
-      // Error in request setup
-      throw new Error('Failed to make request. Please try again.');
-    }
+const unwrapData = <T>(payload: T | ApiEnvelope<T>): T => {
+  if (payload && typeof payload === 'object' && 'data' in payload) {
+    return (payload as ApiEnvelope<T>).data as T;
   }
-);
+
+  return payload as T;
+};
 
 class UserService {
   /**
    * Fetch all users
    */
   async getAllUsers(): Promise<User[]> {
-    try {
-      const url = `${API_CONFIG.ENDPOINTS.USERS}`;
-      console.log('Fetching users from:', API_CONFIG.BASE_URL + url);
-      
-      const response = await apiClient.get(url);
-      
-      console.log('Response status:', response.status);
-      console.log('Response data:', response.data);
-      
-      // The API returns { data: [...] }
-      if (response.data && response.data.data) {
-        console.log('Fetched users:', response.data.data.length);
-        return response.data.data;
-      }
-      
-      // If direct array
-      if (Array.isArray(response.data)) {
-        console.log('Fetched users:', response.data.length);
-        return response.data;
-      }
-      
-      throw new Error('Invalid response format from server');
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      throw error;
-    }
+    const response = await apiClient.get<User[] | ApiEnvelope<User[]>>(API_CONFIG.ENDPOINTS.USERS);
+    const users = unwrapData(response.data);
+
+    if (!Array.isArray(users)) throw new Error('The users endpoint returned an unexpected response.');
+
+    return users;
   }
 
   /**
    * Fetch user by ID
    */
   async getUserById(id: string): Promise<User> {
-    try {
-      const url = `${API_CONFIG.ENDPOINTS.USER_BY_ID(id)}`;
-      console.log('Fetching user from:', API_CONFIG.BASE_URL + url);
-      
-      const response = await apiClient.get(url);
-      
-      // Handle response format
-      if (response.data && response.data.data) {
-        return response.data.data;
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching user:', error);
-      throw error;
-    }
+    const response = await apiClient.get<User | ApiEnvelope<User>>(API_CONFIG.ENDPOINTS.USER_BY_ID(id));
+    return unwrapData(response.data);
   }
 
-  /**
-   * Create new user
-   */
-  async createUser(payload: CreateUserPayload): Promise<User> {
-    try {
-      const url = `${API_CONFIG.ENDPOINTS.USERS}`;
-      
-      const response = await apiClient.post(url, payload);
-      
-      if (response.data && response.data.data) {
-        return response.data.data;
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error('Error creating user:', error);
-      throw error;
-    }
+  /** Soft-deletes a user. */
+  async softDeleteUser(id: string): Promise<void> {
+    await apiClient.delete(API_CONFIG.ENDPOINTS.SOFT_DELETE_USER(id));
   }
 
-  /**
-   * Update user
-   */
-  async updateUser(id: string, payload: UpdateUserPayload): Promise<User> {
-    try {
-      const url = `${API_CONFIG.ENDPOINTS.USER_BY_ID(id)}`;
-      
-      const response = await apiClient.put(url, payload);
-      
-      if (response.data && response.data.data) {
-        return response.data.data;
-      }
-      
-      return response.data;
-    } catch (error) {
-      console.error('Error updating user:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Delete user
-   */
-  async deleteUser(id: string): Promise<void> {
-    try {
-      const url = `${API_CONFIG.ENDPOINTS.DELETE_USER(id)}`;
-      console.log('Deleting user from:', API_CONFIG.BASE_URL + url);
-      
-      await apiClient.delete(url);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * Search users by name or email
-   * NOTE: Update this method with your actual search API endpoint when available
-   */
-  async searchUsers(query: string): Promise<User[]> {
-    try {
-      // TODO: Replace with your actual search API endpoint
-      // Example: const url = `/users/search?q=${encodeURIComponent(query)}`;
-      // For now, this is a placeholder that falls back to getAllUsers
-      
-      console.log('Search query:', query);
-      
-      // Placeholder: When you provide the search API, replace this entire block
-      // with the actual API call, something like:
-      // const response = await apiClient.get(`/users/search?q=${encodeURIComponent(query)}`);
-      // return response.data.data || response.data;
-      
-      throw new Error('Search API endpoint not configured yet. Please provide the search API details.');
-    } catch (error) {
-      console.error('Error searching users:', error);
-      throw error;
-    }
+  /** Permanently removes a user and all recoverable data is lost. */
+  async permanentlyDeleteUser(id: string): Promise<void> {
+    await apiClient.delete(API_CONFIG.ENDPOINTS.PERMANENT_DELETE_USER(id));
   }
 }
 

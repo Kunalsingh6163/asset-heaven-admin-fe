@@ -5,6 +5,7 @@ import Sidebar, { MobileMenuButton } from './Sidebar';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useRouter } from 'next/navigation';
 import { BellIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { clearAccessToken } from '@/services/api/apiClient';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,6 +16,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const router = useRouter();
 
   const handleLogout = () => {
+    clearAccessToken();
+    sessionStorage.removeItem('isAdminAuthenticated');
     router.push('/login');
   };
 

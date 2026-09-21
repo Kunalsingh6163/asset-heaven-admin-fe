@@ -27,5 +27,7 @@ export interface UsersState {
   users: User[];
   selectedUser: User | null;
   loading: boolean;
+  detailsLoading: boolean;
+  deletingUserId: string | null;
   error: string | null;
 }

@@ -2,17 +2,22 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { fetchUsers, fetchUserById, clearSelectedUser, deleteUser } from '@/features/users/usersSlice';
+import {
+  clearSelectedUser,
+  fetchUserById,
+  fetchUsers,
+  permanentlyDeleteUser,
+  softDeleteUser,
+} from '@/features/users/usersSlice';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import UserTable from '@/components/dashboard/UserTable';
 import UserDetailsModal from '@/components/dashboard/UserDetailsModal';
-import { User } from '@/types/user.types';
 
 type SortOption = 'name-asc' | 'name-desc' | 'verified' | 'not-verified' | 'none';
 
 export default function UsersPage() {
   const dispatch = useAppDispatch();
-  const { users, selectedUser, loading, error } = useAppSelector((state) => state.users);
+  const { users, selectedUser, loading, detailsLoading, deletingUserId, error } = useAppSelector((state) => state.users);
   const [showModal, setShowModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOption, setSortOption] = useState<SortOption>('none');
@@ -64,15 +69,13 @@ export default function UsersPage() {
     setSortOption('none'); // Reset sort on refresh
   };
 
-  const handleSearch = () => {
-    // This function will be used later when integrating the search API
-    // For now, the search is handled by the useEffect above
-    console.log('Search triggered for:', searchQuery);
-  };
-
   const handleViewDetails = async (userId: string) => {
-    await dispatch(fetchUserById(userId));
     setShowModal(true);
+    try {
+      await dispatch(fetchUserById(userId)).unwrap();
+    } catch {
+      // The modal displays the API error and lets the administrator close it.
+    }
   };
 
   const handleCloseModal = () => {
@@ -80,21 +83,32 @@ export default function UsersPage() {
     dispatch(clearSelectedUser());
   };
 
-  const handleDeleteUser = async (userId: string) => {
-    // Find the user to get their name for the confirmation message
+  const getUserName = (userId: string) => {
     const userToDelete = users.find(u => u._id === userId);
-    const userName = userToDelete?.name || 'this user';
+    return userToDelete?.name || 'this user';
+  };
 
-    // Show confirmation dialog
-    if (window.confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`)) {
-      try {
-        await dispatch(deleteUser(userId)).unwrap();
-        // Show success message
-        alert(`User ${userName} has been deleted successfully.`);
-      } catch (error) {
-        // Error is already in the state, but we can show an alert too
-        alert(`Failed to delete user: ${error}`);
-      }
+  const handleSoftDeleteUser = async (userId: string) => {
+    const userName = getUserName(userId);
+    if (!window.confirm(`Soft-delete ${userName}? The user will be removed from the active users list.`)) return;
+
+    try {
+      await dispatch(softDeleteUser(userId)).unwrap();
+      alert(`${userName} was soft-deleted.`);
+    } catch (requestError) {
+      alert(`Unable to soft-delete ${userName}: ${requestError}`);
+    }
+  };
+
+  const handlePermanentlyDeleteUser = async (userId: string) => {
+    const userName = getUserName(userId);
+    if (!window.confirm(`Permanently delete ${userName}? This cannot be undone.`)) return;
+
+    try {
+      await dispatch(permanentlyDeleteUser(userId)).unwrap();
+      alert(`${userName} was permanently deleted.`);
+    } catch (requestError) {
+      alert(`Unable to permanently delete ${userName}: ${requestError}`);
     }
   };
 
@@ -152,7 +166,7 @@ export default function UsersPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    handleSearch();
+                    e.currentTarget.blur();
                   }
                 }}
                 className="w-full px-4 py-3 pl-12 border-2 border-lime/30 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-lime focus:border-lime transition-all font-medium"
@@ -183,7 +197,6 @@ export default function UsersPage() {
               )}
             </div>
             <button
-              onClick={handleSearch}
               disabled={!searchQuery.trim()}
               className="px-6 py-3 pink-gradient disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-all shadow-pink hover:shadow-pink-lg transform hover:scale-105 font-semibold flex items-center gap-2"
             >
@@ -195,7 +208,7 @@ export default function UsersPage() {
           </div>
           {searchQuery && (
             <p className="mt-2 text-sm text-gray-600">
-              Found <span className="font-bold text-lime-dark">{filteredAndSortedUsers.length}</span> user{filteredAndSortedUsers.length !== 1 ? 's' : ''} matching "{searchQuery}"
+              Found <span className="font-bold text-lime-dark">{filteredAndSortedUsers.length}</span> user{filteredAndSortedUsers.length !== 1 ? 's' : ''} matching &quot;{searchQuery}&quot;
             </p>
           )}
         </div>
@@ -254,15 +267,22 @@ export default function UsersPage() {
           <UserTable
             users={filteredAndSortedUsers}
             onViewDetails={handleViewDetails}
-            onDeleteUser={handleDeleteUser}
+            onSoftDeleteUser={handleSoftDeleteUser}
+            onPermanentlyDeleteUser={handlePermanentlyDeleteUser}
             loading={loading}
+            deletingUserId={deletingUserId}
           />
         </div>
       </div>
 
       {/* User Details Modal */}
       {showModal && (
-        <UserDetailsModal user={selectedUser} onClose={handleCloseModal} />
+        <UserDetailsModal
+          user={selectedUser}
+          loading={detailsLoading}
+          error={error}
+          onClose={handleCloseModal}
+        />
       )}
     </DashboardLayout>
   );
