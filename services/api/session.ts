@@ -27,3 +27,18 @@ export function clearSession(): void {
   window.sessionStorage.removeItem('isAdminAuthenticated');
   window.dispatchEvent(new Event(SESSION_CHANGED));
 }
+
+/** Explicit logout clears all storage belonging to this application origin. */
+export function clearClientStorage(): void {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.clear();
+  } catch {
+    // Storage can be blocked by browser settings. Still clear the session.
+  }
+  try {
+    window.sessionStorage.clear();
+  } finally {
+    window.dispatchEvent(new Event(SESSION_CHANGED));
+  }
+}

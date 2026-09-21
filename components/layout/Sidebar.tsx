@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { 
-  HomeIcon, 
-  UsersIcon, 
-  ChartBarIcon, 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  HomeIcon,
+  UsersIcon,
+  ChartBarIcon,
   CurrencyDollarIcon,
   NewspaperIcon,
   Cog6ToothIcon,
   Bars3Icon,
-  XMarkIcon
-} from '@heroicons/react/24/outline';
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
-  { name: 'Users', href: '/dashboard/users', icon: UsersIcon },
-  { name: 'Stocks', href: '/dashboard/stocks', icon: ChartBarIcon },
-  { name: 'Mutual Funds', href: '/dashboard/mutual-funds', icon: CurrencyDollarIcon },
-  { name: 'News', href: '/dashboard/news', icon: NewspaperIcon },
+  { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
+  { name: "Users", href: "/dashboard/users", icon: UsersIcon },
+  { name: "Stocks", href: "/dashboard/stocks", icon: ChartBarIcon },
+  // { name: 'Mutual Funds', href: '/dashboard/mutual-funds', icon: CurrencyDollarIcon },
+  { name: "News", href: "/dashboard/news", icon: NewspaperIcon },
 ];
 
 interface SidebarProps {
@@ -28,19 +28,18 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
-
   return (
     <>
       {/* Mobile overlay */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`
           fixed lg:sticky top-0 left-0 z-50 lg:z-0
           w-64 bg-surface
@@ -48,7 +47,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           flex flex-col h-screen
           transition-transform duration-300 ease-in-out
           shadow-lg
-          ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {/* Logo */}
@@ -58,11 +57,15 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               <span className="text-white font-bold text-lg">AH</span>
             </div>
             <div>
-              <span className="text-lg font-bold text-gradient-vibrant block">Asset Heaven</span>
-              <span className="text-[10px] text-secondary uppercase tracking-wider">Admin Portal</span>
+              <span className="text-lg font-bold text-gradient-vibrant block">
+                Asset Heaven
+              </span>
+              <span className="text-[10px] text-secondary uppercase tracking-wider">
+                Admin Portal
+              </span>
             </div>
           </div>
-          
+
           {/* Close button for mobile */}
           <button
             onClick={onClose}
@@ -77,7 +80,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
           {navigation.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
-            
+
             return (
               <Link
                 key={item.name}
@@ -85,13 +88,16 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                 onClick={onClose}
                 className={`
                   group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
-                  ${isActive 
-                    ? 'vibrant-gradient text-white shadow-vibrant font-semibold transform scale-[1.02]' 
-                    : 'text-foreground hover:bg-muted hover:text-pink hover:pl-5'
+                  ${
+                    isActive
+                      ? "vibrant-gradient text-white shadow-vibrant font-semibold transform scale-[1.02]"
+                      : "text-foreground hover:bg-muted hover:text-pink hover:pl-5"
                   }
                 `}
               >
-                <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'drop-shadow-sm' : ''}`} />
+                <Icon
+                  className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? "drop-shadow-sm" : ""}`}
+                />
                 <span className="font-medium">{item.name}</span>
                 {isActive && (
                   <div className="ml-auto w-2 h-2 rounded-full bg-surface animate-pulse"></div>
@@ -111,7 +117,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
             <Cog6ToothIcon className="w-5 h-5 transition-transform group-hover:rotate-90 duration-300" />
             <span className="font-medium">Settings</span>
           </Link>
-          
+
           {/* Decorative element */}
           <div className="mt-4 pt-4 border-t border-border">
             <div className="flex items-center justify-center gap-2">

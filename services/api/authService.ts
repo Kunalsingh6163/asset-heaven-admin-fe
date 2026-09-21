@@ -1,8 +1,8 @@
 import { apiClient } from './apiClient';
-import { clearSession, getSession, saveSession } from './session';
+import { clearClientStorage, clearSession, getSession, saveSession } from './session';
 import { API_CONFIG } from './config';
 
-type AdminUser = {
+export type AdminUser = {
   admin?: boolean;
   name?: string;
   email?: string;
@@ -62,7 +62,7 @@ class AuthService {
     try {
       if (session) await apiClient.post(API_CONFIG.ENDPOINTS.LOGOUT, { refreshToken: session.refreshToken });
     } finally {
-      clearSession();
+      clearClientStorage();
     }
   }
 

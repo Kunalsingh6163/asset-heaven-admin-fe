@@ -3,9 +3,8 @@
 import { ReactNode, useState } from 'react';
 import Sidebar, { MobileMenuButton } from './Sidebar';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
-import { useRouter } from 'next/navigation';
-import { BellIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { authService } from '@/services/api/authService';
+import { BellIcon } from '@heroicons/react/24/outline';
+import AdminMenu from './AdminMenu';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -13,17 +12,6 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await authService.logout();
-    } catch {
-      // Local session is still cleared if the backend is unavailable.
-    } finally {
-      router.replace('/login');
-    }
-  };
 
   return (
     <div className="flex h-screen bg-canvas">
@@ -57,19 +45,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </button>
 
             {/* User Menu */}
-            <div className="hidden sm:flex items-center gap-3 pl-3 border-l-2 border-border">
-              <div className="text-right">
-                <p className="text-sm font-semibold text-foreground">Admin User</p>
-                <p className="text-xs text-secondary uppercase tracking-wide">Administrator</p>
-              </div>
-              <button 
-                onClick={handleLogout}
-                className="p-1 text-secondary hover:text-pink rounded-xl hover:bg-muted transition-all transform hover:scale-110"
-                title="Logout"
-              >
-                <UserCircleIcon className="w-8 h-8" />
-              </button>
-            </div>
+            <AdminMenu />
           </div>
         </header>
         

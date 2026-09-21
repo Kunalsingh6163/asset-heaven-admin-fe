@@ -29,6 +29,7 @@ export function AppProviders({ children }: Readonly<{ children: React.ReactNode 
       if (!getSession()) {
         stores.users.getState().resetUsers();
         stores.news.getState().resetNews();
+        stores.theme.getState().syncTheme(getPreferredTheme());
       }
     };
     media.addEventListener('change', onSystemChange);
