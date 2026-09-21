@@ -15,8 +15,8 @@ asset-heaven-admin-fe/
 │       ├── UserTable.tsx       # User data table
 │       └── UserDetailsModal.tsx # Modal for viewing user details
 ├── features/
-│   └── users/                  # User feature slice
-│       └── usersSlice.ts       # Redux slice for user state management
+│   └── users/                  # User feature store
+│       └── usersStore.ts       # Zustand store for user state management
 ├── services/
 │   └── api/                    # API service layer
 │       ├── userService.ts      # User API calls
@@ -24,8 +24,8 @@ asset-heaven-admin-fe/
 ├── types/
 │   └── user.types.ts           # TypeScript types for users
 └── lib/
-    ├── store.ts                # Redux store configuration
-    └── hooks.ts                # Redux hooks
+    ├── store.ts                # Zustand store factories
+    └── hooks.ts                # Zustand selector hooks
 ```
 
 ## 🎯 Features
@@ -35,7 +35,7 @@ asset-heaven-admin-fe/
 - **Real-time Loading**: Loading states and error handling
 - **Dark Mode Support**: Fully themed for light and dark modes
 - **Refresh Data**: Manual refresh button to reload users
-- **Redux State Management**: Centralized state with Redux Toolkit
+- **Zustand State Management**: Centralized state with Zustand
 - **Type Safety**: Full TypeScript support
 
 ## 🔌 API Endpoints Used
@@ -94,8 +94,8 @@ Responsive table component for displaying user data with loading and empty state
 ### `components/dashboard/UserDetailsModal.tsx`
 Modal dialog for viewing detailed user information.
 
-### `features/users/usersSlice.ts`
-Redux Toolkit slice managing user state with async thunks for API calls.
+### `features/users/usersStore.ts`
+Zustand store managing user state with async actions for API calls.
 
 ### `services/api/userService.ts`
 Service layer for all user-related API calls. Includes methods for:
@@ -110,7 +110,7 @@ TypeScript interfaces for type safety:
 - `User` - User entity
 - `CreateUserPayload` - User creation data
 - `UpdateUserPayload` - User update data
-- `UsersState` - Redux state shape
+- `UsersState` - Zustand state shape
 
 ## 🎨 Styling
 
@@ -119,13 +119,13 @@ The dashboard uses Tailwind CSS with full dark mode support. All components are 
 ## 🔄 State Management Flow
 
 ```
-Component → Dispatch Action → Redux Thunk → API Service → Update State → Re-render Component
+Component → Call store action → Zustand async action → API Service → Update State → Re-render Component
 ```
 
-1. Component dispatches async action (e.g., `fetchUsers()`)
-2. Redux Toolkit thunk calls the API service
+1. Component calls async action (e.g., `fetchUsers()`)
+2. Zustand async action calls the API service
 3. Service makes HTTP request to backend
-4. Response updates Redux state
+4. Response updates Zustand state
 5. Component re-renders with new data
 
 ## 🛡️ Error Handling
@@ -148,4 +148,4 @@ These can be integrated with UI components when needed.
 - All API calls use `cache: 'no-store'` to ensure fresh data
 - Password fields are never displayed in the UI
 - The service layer is fully typed for IDE autocomplete
-- Redux DevTools are enabled in development mode
+- Stores are isolated per app provider; only the theme is persisted

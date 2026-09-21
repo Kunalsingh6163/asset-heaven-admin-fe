@@ -16,8 +16,8 @@ export default function StocksPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Stocks Overview</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h1 className="text-2xl font-bold text-foreground ">Stocks Overview</h1>
+          <p className="text-sm text-subtle mt-1">
             Track and monitor stock performance
           </p>
         </div>
@@ -26,12 +26,12 @@ export default function StocksPage() {
           {stocks.map((stock) => (
             <div
               key={stock.symbol}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              className="bg-surface rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-shadow"
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    <h3 className="text-lg font-bold text-foreground ">
                       {stock.symbol}
                     </h3>
                     <span
@@ -44,8 +44,8 @@ export default function StocksPage() {
                       {stock.change}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{stock.name}</p>
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-sm text-secondary mb-3">{stock.name}</p>
+                  <p className="text-2xl font-bold text-foreground ">
                     ₹{stock.price}
                   </p>
                 </div>

@@ -26,7 +26,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-canvas">
       {/* Sidebar */}
       <Sidebar 
         isOpen={isMobileMenuOpen} 
@@ -36,7 +36,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-16 bg-white border-b-2 border-gray-200 flex items-center justify-between px-4 sm:px-6 shadow-sm">
+        <header className="h-16 bg-surface border-b-2 border-border flex items-center justify-between px-4 sm:px-6 shadow-sm">
           {/* Mobile Menu Button */}
           <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
           
@@ -51,20 +51,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <ThemeToggle />
 
             {/* Notifications */}
-            <button className="relative p-2 text-gray-600 hover:text-pink rounded-xl hover:bg-gray-100 transition-all shadow-sm hover:shadow-pink">
+            <button className="relative p-2 text-secondary hover:text-pink rounded-xl hover:bg-muted transition-all shadow-sm hover:shadow-pink">
               <BellIcon className="w-6 h-6" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-gradient-to-br from-lime to-pink rounded-full animate-pulse"></span>
             </button>
 
             {/* User Menu */}
-            <div className="hidden sm:flex items-center gap-3 pl-3 border-l-2 border-gray-200">
+            <div className="hidden sm:flex items-center gap-3 pl-3 border-l-2 border-border">
               <div className="text-right">
-                <p className="text-sm font-semibold text-gray-900">Admin User</p>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">Administrator</p>
+                <p className="text-sm font-semibold text-foreground">Admin User</p>
+                <p className="text-xs text-secondary uppercase tracking-wide">Administrator</p>
               </div>
               <button 
                 onClick={handleLogout}
-                className="p-1 text-gray-600 hover:text-pink rounded-xl hover:bg-gray-100 transition-all transform hover:scale-110"
+                className="p-1 text-secondary hover:text-pink rounded-xl hover:bg-muted transition-all transform hover:scale-110"
                 title="Logout"
               >
                 <UserCircleIcon className="w-8 h-8" />
@@ -74,7 +74,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </header>
         
         {/* Page Content - Removed max-width for full-width table */}
-        <main className="flex-1 overflow-y-auto bg-gray-50">
+        <main className="flex-1 overflow-y-auto bg-canvas">
           <div className="w-full px-4 sm:px-6 lg:px-8 py-8">
             {children}
           </div>

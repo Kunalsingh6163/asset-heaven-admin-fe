@@ -1,41 +1,46 @@
-"use client";
+'use client';
 
-import { Provider } from "react-redux";
-import { useEffect } from "react";
-import { store } from "@/lib/store";
-import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { setTheme, type ThemeMode } from "@/features/theme/themeSlice";
-
-function ThemeSynchronizer({ children }: Readonly<{ children: React.ReactNode }>) {
-  const theme = useAppSelector((state) => state.theme.mode);
-  const dispatch = useAppDispatch();
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as ThemeMode;
-    if (savedTheme && (savedTheme === 'light' || savedTheme === 'dark')) {
-      dispatch(setTheme(savedTheme));
-    } else {
-      // Check system preference
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      dispatch(setTheme(prefersDark ? 'dark' : 'light'));
-    }
-  }, [dispatch]);
-
-  // Apply dark class to html element for Tailwind dark mode
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  return children;
-}
+import { useEffect, useState } from 'react';
+import { createAppStores } from '@/lib/store';
+import { StoresContext } from '@/lib/hooks';
+import { getPreferredTheme, readThemePreference } from '@/features/theme/themeStore';
+import { getSession, SESSION_CHANGED } from '@/services/api/session';
 
 export function AppProviders({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <Provider store={store}><ThemeSynchronizer>{children}</ThemeSynchronizer></Provider>;
+  const [stores] = useState(createAppStores);
+
+  useEffect(() => {
+    const applyTheme = () => {
+      const { mode } = stores.theme.getState();
+      document.documentElement.classList.toggle('dark', mode === 'dark');
+      document.documentElement.style.colorScheme = mode;
+    };
+    stores.theme.getState().syncTheme(getPreferredTheme());
+    applyTheme();
+    const unsubscribe = stores.theme.subscribe(applyTheme);
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const onSystemChange = () => {
+      if (!readThemePreference()) stores.theme.getState().syncTheme(getPreferredTheme());
+    };
+    const onStorageChange = (event: StorageEvent) => {
+      if (event.key === 'theme' || event.key === null) stores.theme.getState().syncTheme(getPreferredTheme());
+    };
+    const onSessionChange = () => {
+      if (!getSession()) {
+        stores.users.getState().resetUsers();
+        stores.news.getState().resetNews();
+      }
+    };
+    media.addEventListener('change', onSystemChange);
+    window.addEventListener('storage', onStorageChange);
+    window.addEventListener(SESSION_CHANGED, onSessionChange);
+    return () => {
+      unsubscribe();
+      media.removeEventListener('change', onSystemChange);
+      window.removeEventListener('storage', onStorageChange);
+      window.removeEventListener(SESSION_CHANGED, onSessionChange);
+    };
+  }, [stores]);
+
+  return <StoresContext.Provider value={stores}>{children}</StoresContext.Provider>;
 }

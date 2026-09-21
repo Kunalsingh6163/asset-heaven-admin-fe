@@ -43,7 +43,7 @@ A **production-ready admin dashboard** with:
 
 ### Technical Excellence
 - ✅ **TypeScript** - 100% type-safe code
-- ✅ **Redux Toolkit** - Centralized state management
+- ✅ **Zustand** - Centralized state management
 - ✅ **Service Layer** - Clean API abstraction
 - ✅ **Industry Structure** - Scalable folder organization
 - ✅ **Zero Errors** - Build successful, no warnings
@@ -104,7 +104,7 @@ asset-heaven-admin-fe/
 │
 ├── 🔄 State Management (1 file)
 │   └── features/users/
-│       └── usersSlice.ts
+│       └── usersStore.ts
 │
 ├── 🌐 API Services (3 files)
 │   └── services/api/
@@ -131,15 +131,15 @@ asset-heaven-admin-fe/
 ```
 1. User visits /dashboard
    ↓
-2. Page loads and dispatches fetchUsers()
+2. Page loads and calls fetchUsers()
    ↓
-3. Redux thunk calls userService.getAllUsers()
+3. Zustand async action calls userService.getAllUsers()
    ↓
 4. Service makes HTTP GET request to API
    ↓
 5. API returns user data
    ↓
-6. Redux state updated with users
+6. Zustand state updated with users
    ↓
 7. UserTable component renders with data
 ```
@@ -149,15 +149,15 @@ asset-heaven-admin-fe/
 ```
 1. User clicks "View Details" button
    ↓
-2. Page dispatches fetchUserById(userId)
+2. Page calls fetchUserById(userId)
    ↓
-3. Redux thunk calls userService.getUserById()
+3. Zustand async action calls userService.getUserById()
    ↓
 4. Service makes HTTP GET request
    ↓
 5. API returns single user data
    ↓
-6. Redux state updated with selectedUser
+6. Zustand state updated with selectedUser
    ↓
 7. Modal opens showing user details
 ```
@@ -240,7 +240,7 @@ npm run lint
 │   └── Tailwind CSS 4.x
 │
 ├── 🗄️ State Management
-│   └── Redux Toolkit 2.12.0
+│   └── Zustand 5
 │
 ├── 🌐 API Integration
 │   └── Native Fetch API
@@ -256,7 +256,7 @@ npm run lint
 | Framework | Next.js | 16.3.1 |
 | UI Library | React | 19.2.4 |
 | Language | TypeScript | 5.x |
-| State Management | Redux Toolkit | 2.12.0 |
+| State Management | Zustand | 5 |
 | Styling | Tailwind CSS | 4.x |
 | HTTP Client | Fetch API | Native |
 
@@ -329,8 +329,8 @@ npm run lint
 **Add a new API endpoint:**
 ```bash
 # Add method to services/api/userService.ts
-# Create async thunk in features/users/usersSlice.ts
-# Use in component with dispatch
+# Create async action in features/users/usersStore.ts
+# Use in component through a selector hook
 ```
 
 **Add a new page:**
@@ -356,9 +356,9 @@ npm run lint
    - Understand prop interfaces
    - Learn component patterns
 
-3. **Study state management**: `features/users/usersSlice.ts`
-   - Learn Redux Toolkit patterns
-   - Understand async thunks
+3. **Study state management**: `features/users/usersStore.ts`
+   - Learn Zustand patterns
+   - Understand async actions
    - See state shape
 
 4. **Review API layer**: `services/api/userService.ts`
@@ -370,7 +370,7 @@ npm run lint
 
 This follows the **Layered Architecture**:
 - **Presentation** → Components & Pages
-- **State** → Redux slices
+- **State** → Zustand stores
 - **Service** → API calls
 - **Data** → External API
 
@@ -466,7 +466,7 @@ If you need help:
 1. Check the documentation files
 2. Review the code comments
 3. Inspect the TypeScript types
-4. Use Redux DevTools for debugging
+4. Use store selectors and the state regression checks for debugging
 5. Check browser console for errors
 
 ---
@@ -480,7 +480,7 @@ You now have:
 ✅ **5 comprehensive guides** for easy understanding  
 ✅ **Industry-standard architecture** following best practices  
 ✅ **Full TypeScript** for type safety  
-✅ **Redux state management** with async thunks  
+✅ **Zustand state management** with async actions
 ✅ **Service layer** for clean API integration  
 ✅ **Responsive UI** with dark mode support  
 ✅ **Zero build errors** - verified and tested  

@@ -11,10 +11,10 @@ export default function Home() {
   }, [router]);
 
   return (
-    <div className="h-screen flex items-center justify-center bg-white dark:bg-black text-black dark:text-white">
+    <div className="h-screen flex items-center justify-center bg-surface text-foreground ">
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">Asset Heaven Admin</h1>
-        <p className="text-gray-600 dark:text-gray-400">Redirecting to login...</p>
+        <p className="text-secondary ">Redirecting to login...</p>
       </div>
     </div>
   );

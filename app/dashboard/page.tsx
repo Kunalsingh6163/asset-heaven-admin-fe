@@ -1,42 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { userService } from "@/services/api/userService";
+import { useUsersStore } from "@/lib/hooks";
 import { useRouter } from "next/navigation";
-
-interface DashboardStats {
-  totalUsers: number;
-  verifiedUsers: number;
-  adminUsers: number;
-}
 
 export default function DashboardPage() {
   const router = useRouter();
-  const [stats, setStats] = useState<DashboardStats>({
-    totalUsers: 0,
-    verifiedUsers: 0,
-    adminUsers: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const users = useUsersStore((state) => state.users);
+  const loading = useUsersStore((state) => state.loading);
+  const error = useUsersStore((state) => state.error);
+  const fetchUsers = useUsersStore((state) => state.fetchUsers);
+  const stats = {
+    totalUsers: users.length,
+    verifiedUsers: users.filter((user) => user.isEmailVerified).length,
+    adminUsers: users.filter((user) => user.admin).length,
+  };
 
   useEffect(() => {
-    let active = true;
-    userService.getAllUsers().then((users) => {
-      if (!active) return;
-      setStats({
-        totalUsers: users.length,
-        verifiedUsers: users.filter((u) => u.isEmailVerified).length,
-        adminUsers: users.filter((u) => u.admin).length,
-      });
-    }).catch((err: unknown) => {
-      if (active) setError(err instanceof Error ? err.message : "Failed to load dashboard data");
-    }).finally(() => {
-      if (active) setLoading(false);
-    });
-    return () => { active = false; };
-  }, []);
+    void fetchUsers();
+  }, [fetchUsers]);
 
   const handlealluser = () => {
     router.push("/dashboard/users");
@@ -66,10 +49,10 @@ export default function DashboardPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="p-4 bg-red-50 border-2 border-red-300 rounded-xl">
+          <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-800 rounded-xl">
             <div className="flex items-center gap-3">
               <svg
-                className="w-6 h-6 text-red-600"
+                className="w-6 h-6 text-red-600 dark:text-red-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -82,8 +65,8 @@ export default function DashboardPage() {
                 />
               </svg>
               <div>
-                <p className="font-bold text-red-800">Error</p>
-                <p className="text-sm text-red-700">{error}</p>
+                <p className="font-bold text-red-800 dark:text-red-300">Error</p>
+                <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
               </div>
             </div>
           </div>
@@ -92,10 +75,10 @@ export default function DashboardPage() {
         {/* Stats Grid - Expanded Size */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {/* Total Users */}
-          <div className="bg-white rounded-2xl p-8 shadow-lime border-2 border-lime/20 hover:shadow-lime-lg transition-all hover:scale-[1.02] transform">
+          <div className="bg-surface rounded-2xl p-8 shadow-lime border-2 border-lime/20 hover:shadow-lime-lg transition-all hover:scale-[1.02] transform">
             <div className="flex items-center justify-between">
               <div className="flex-1" onClick={handlealluser}>
-                <p className="text-sm text-gray-600 font-medium uppercase tracking-wide mb-2">
+                <p className="text-sm text-secondary font-medium uppercase tracking-wide mb-2">
                   Total Users
                 </p>
                 <p className="text-5xl font-bold text-gradient-vibrant mt-2 mb-3">
@@ -106,11 +89,11 @@ export default function DashboardPage() {
                   )}
                 </p>
                 <div className="flex items-center gap-2 text-xs font-semibold">
-                  <span className="text-green-600">
+                  <span className="text-green-600 dark:text-green-300">
                     {loading ? "..." : `${stats.verifiedUsers} verified`}
                   </span>
-                  {/* <span className="text-gray-500">•</span>
-                  <span className="text-gray-600">
+                  {/* <span className="text-subtle">•</span>
+                  <span className="text-secondary">
                     {loading ? '...' : `${stats.adminUsers} admin`}
                   </span> */}
                 </div>
@@ -134,16 +117,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Active Stocks */}
-          <div className="bg-white rounded-2xl p-8 shadow-pink border-2 border-pink/20 hover:shadow-pink-lg transition-all hover:scale-[1.02] transform">
+          <div className="bg-surface rounded-2xl p-8 shadow-pink border-2 border-pink/20 hover:shadow-pink-lg transition-all hover:scale-[1.02] transform">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <p className="text-sm text-gray-600 font-medium uppercase tracking-wide mb-2">
+                <p className="text-sm text-secondary font-medium uppercase tracking-wide mb-2">
                   Active Stocks
                 </p>
                 <p className="text-5xl font-bold text-gradient-pink mt-2 mb-3">
                   456
                 </p>
-                <p className="text-xs text-green-600 font-semibold">
+                <p className="text-xs text-green-600 dark:text-green-300 font-semibold">
                   ↑ 8% from last month
                 </p>
               </div>
@@ -166,16 +149,16 @@ export default function DashboardPage() {
           </div>
 
           {/* Mutual Funds */}
-          <div className="bg-white rounded-2xl p-8 shadow-lime border-2 border-lime/20 hover:shadow-lime-lg transition-all hover:scale-[1.02] transform">
+          <div className="bg-surface rounded-2xl p-8 shadow-lime border-2 border-lime/20 hover:shadow-lime-lg transition-all hover:scale-[1.02] transform">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <p className="text-sm text-gray-600 font-medium uppercase tracking-wide mb-2">
+                <p className="text-sm text-secondary font-medium uppercase tracking-wide mb-2">
                   Mutual Funds
                 </p>
                 <p className="text-5xl font-bold text-gradient-lime mt-2 mb-3">
                   89
                 </p>
-                <p className="text-xs text-green-600 font-semibold">
+                <p className="text-xs text-green-600 dark:text-green-300 font-semibold">
                   ↑ 15% from last month
                 </p>
               </div>
@@ -198,10 +181,10 @@ export default function DashboardPage() {
           </div>
 
           {/* Verified Users */}
-          <div className="bg-white rounded-2xl p-8 shadow-vibrant border-2 border-pink/20 hover:shadow-vibrant-lg transition-all hover:scale-[1.02] transform">
+          <div className="bg-surface rounded-2xl p-8 shadow-vibrant border-2 border-pink/20 hover:shadow-vibrant-lg transition-all hover:scale-[1.02] transform">
             <div className="flex items-center justify-between">
               <div className="flex-1">
-                <p className="text-sm text-gray-600 font-medium uppercase tracking-wide mb-2">
+                <p className="text-sm text-secondary font-medium uppercase tracking-wide mb-2">
                   Verified Users
                 </p>
                 <p className="text-5xl font-bold text-gradient-pink mt-2 mb-3">
@@ -211,7 +194,7 @@ export default function DashboardPage() {
                     stats.verifiedUsers
                   )}
                 </p>
-                <p className="text-xs text-gray-600 font-semibold">
+                <p className="text-xs text-secondary font-semibold">
                   {loading
                     ? "..."
                     : `${stats.totalUsers > 0 ? ((stats.verifiedUsers / stats.totalUsers) * 100).toFixed(1) : 0}% verified`}
@@ -238,7 +221,7 @@ export default function DashboardPage() {
 
         {/* Recent Activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-          <div className="bg-white rounded-2xl p-8 shadow-lime border-2 border-lime/20">
+          <div className="bg-surface rounded-2xl p-8 shadow-lime border-2 border-lime/20">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gradient-lime">
                 Recent News
@@ -263,21 +246,21 @@ export default function DashboardPage() {
               {[1, 2, 3].map((item) => (
                 <div
                   key={item}
-                  className="flex items-start gap-4 pb-4 border-b border-gray-200 last:border-0 hover:bg-gray-50 p-3 rounded-lg transition-all"
+                  className="flex items-start gap-4 pb-4 border-b border-border last:border-0 hover:bg-canvas p-3 rounded-lg transition-all"
                 >
                   <div className="w-2 h-2 bg-lime rounded-full mt-2 shadow-md animate-pulse"></div>
                   <div className="flex-1">
-                    <p className="text-base font-semibold text-gray-900">
+                    <p className="text-base font-semibold text-foreground">
                       Market Update #{item}
                     </p>
-                    <p className="text-sm text-gray-600 mt-1">2 hours ago</p>
+                    <p className="text-sm text-secondary mt-1">2 hours ago</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 shadow-pink border-2 border-pink/20">
+          <div className="bg-surface rounded-2xl p-8 shadow-pink border-2 border-pink/20">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gradient-pink">
                 Top Performing Stocks
@@ -300,19 +283,19 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-4">
               {[
-                { name: "RELIANCE", change: "+5.2%", color: "text-green-600" },
-                { name: "TCS", change: "+3.8%", color: "text-green-600" },
-                { name: "HDFC BANK", change: "+2.1%", color: "text-green-600" },
+                { name: "RELIANCE", change: "+5.2%", color: "text-green-600 dark:text-green-300" },
+                { name: "TCS", change: "+3.8%", color: "text-green-600 dark:text-green-300" },
+                { name: "HDFC BANK", change: "+2.1%", color: "text-green-600 dark:text-green-300" },
               ].map((stock) => (
                 <div
                   key={stock.name}
-                  className="flex items-center justify-between pb-4 border-b border-gray-200 last:border-0 hover:bg-gray-50 p-3 rounded-lg transition-all"
+                  className="flex items-center justify-between pb-4 border-b border-border last:border-0 hover:bg-canvas p-3 rounded-lg transition-all"
                 >
-                  <span className="text-base font-semibold text-gray-900">
+                  <span className="text-base font-semibold text-foreground">
                     {stock.name}
                   </span>
                   <span
-                    className={`text-base font-bold ${stock.color} bg-green-50 px-3 py-1 rounded-lg`}
+                    className={`text-base font-bold ${stock.color} bg-green-50 dark:bg-green-950/40 px-3 py-1 rounded-lg`}
                   >
                     {stock.change}
                   </span>

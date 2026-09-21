@@ -25,14 +25,14 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-vibrant-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-lime/30">
-        <div className="flex justify-between items-center p-6 border-b-2 border-gray-200 sticky top-0 bg-white">
+      <div className="bg-surface rounded-2xl shadow-vibrant-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border-2 border-lime/30">
+        <div className="flex justify-between items-center p-6 border-b-2 border-border sticky top-0 bg-surface">
           <h2 className="text-2xl font-bold text-gradient-vibrant">
             User Details
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-600 hover:text-pink transition-all p-2 hover:bg-gray-100 rounded-xl"
+            className="text-secondary hover:text-pink transition-all p-2 hover:bg-muted rounded-xl"
           >
             <svg
               className="w-6 h-6"
@@ -52,14 +52,14 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
 
         <div className="p-6 space-y-6">
           {loading && (
-            <div className="flex items-center justify-center gap-3 py-12 text-gray-600">
+            <div className="flex items-center justify-center gap-3 py-12 text-secondary">
               <div className="animate-spin rounded-full h-8 w-8 border-4 border-lime border-t-transparent" />
               <span className="font-medium">Loading user details…</span>
             </div>
           )}
 
           {!loading && error && !user && (
-            <div className="rounded-xl border-2 border-red-300 bg-red-50 p-4 text-red-800">
+            <div className="rounded-xl border-2 border-red-300 dark:border-red-800 bg-red-50 dark:bg-red-950/40 p-4 text-red-800 dark:text-red-300">
               <p className="font-bold">Unable to load user details</p>
               <p className="mt-1 text-sm">{error}</p>
             </div>
@@ -68,11 +68,11 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
           {!loading && user && (
             <>
           {/* User ID */}
-          <div className="bg-gradient-to-r from-gray-50 to-transparent p-4 rounded-xl border border-gray-200">
-            <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">
+          <div className="bg-gradient-to-r from-canvas to-transparent p-4 rounded-xl border border-border">
+            <label className="text-sm font-bold text-foreground uppercase tracking-wide">
               User ID
             </label>
-            <p className="mt-2 text-sm text-gray-900 font-mono bg-white px-3 py-2 rounded-lg border border-gray-200">
+            <p className="mt-2 text-sm text-foreground font-mono bg-surface px-3 py-2 rounded-lg border border-border">
               {user._id}
             </p>
           </div>
@@ -86,20 +86,20 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
               Basic Information
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Name
                 </label>
-                <p className="mt-1 text-base text-gray-900 font-semibold">
+                <p className="mt-1 text-base text-foreground font-semibold">
                   {user.name}
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Email
                 </label>
-                <p className="mt-1 text-base text-gray-900 break-all">
+                <p className="mt-1 text-base text-foreground break-all">
                   {user.email}
                 </p>
               </div>
@@ -115,8 +115,8 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
               Authentication
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Auth Methods
                 </label>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -128,11 +128,11 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Last Login Method
                 </label>
-                <p className="mt-1 text-base text-gray-900 capitalize font-medium">
+                <p className="mt-1 text-base text-foreground capitalize font-medium">
                   {user.lastLoginMethod.replace('_', ' ')}
                 </p>
               </div>
@@ -148,20 +148,20 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
               Status
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Email Verified
                 </label>
                 <div className="mt-2">
                   {user.isEmailVerified ? (
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-800 border border-green-300">
+                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300 border border-green-300 dark:border-green-800">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
                       Verified
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-gray-100 text-gray-700 border border-gray-300">
+                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-muted text-foreground border border-border-strong">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                       </svg>
@@ -171,13 +171,13 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   User Role
                 </label>
                 <div className="mt-2">
                   {user.admin ? (
-                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-pink/20 text-pink-dark border border-pink/40">
+                    <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-bold bg-pink/20 text-pink-dark dark:text-pink-light border border-pink/40">
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
@@ -202,20 +202,20 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
               Timestamps
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Created At
                 </label>
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-foreground">
                   {formatDate(user.createdAt)}
                 </p>
               </div>
 
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                <label className="text-sm font-medium text-gray-600 uppercase tracking-wide">
+              <div className="bg-canvas p-4 rounded-xl border border-border">
+                <label className="text-sm font-medium text-secondary uppercase tracking-wide">
                   Last Updated
                 </label>
-                <p className="mt-1 text-sm text-gray-900">
+                <p className="mt-1 text-sm text-foreground">
                   {formatDate(user.updatedAt)}
                 </p>
               </div>
@@ -225,7 +225,7 @@ export default function UserDetailsModal({ user, loading = false, error = null, 
           )}
         </div>
 
-        <div className="p-6 border-t-2 border-gray-200 bg-gradient-to-r from-gray-50 to-transparent sticky bottom-0">
+        <div className="p-6 border-t-2 border-border bg-gradient-to-r from-canvas to-transparent sticky bottom-0">
           <button
             onClick={onClose}
             className="w-full vibrant-gradient text-white font-bold py-3 px-4 rounded-xl transition-all shadow-vibrant hover:shadow-vibrant-lg transform hover:scale-[1.02]"

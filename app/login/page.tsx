@@ -3,10 +3,11 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/api/authService';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 type AuthView = 'login' | 'forgot-password' | 'verify-otp' | 'reset-password';
 
-const inputClassName = 'appearance-none relative block w-full px-4 py-3 border-2 border-gray-200 placeholder-gray-400 text-gray-900 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-lime focus:border-lime transition-all text-sm font-medium';
+const inputClassName = 'appearance-none relative block w-full px-4 py-3 border-2 border-border placeholder-subtle text-foreground bg-canvas rounded-xl focus:outline-none focus:ring-2 focus:ring-lime focus:border-lime transition-all text-sm font-medium';
 
 const viewContent: Record<AuthView, { title: string; description: string; submitLabel: string }> = {
   login: { title: 'Admin Portal', description: 'Sign in to access the admin dashboard', submitLabel: 'Sign in' },
@@ -80,7 +81,8 @@ export default function LoginPage() {
   const isLogin = view === 'login';
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-canvas px-4 relative overflow-hidden">
+      <div className="absolute right-4 top-4 z-20"><ThemeToggle /></div>
       <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-lime/20 to-transparent rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-tl from-pink/20 to-transparent rounded-full blur-3xl" />
 
@@ -92,28 +94,28 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="text-4xl font-bold text-gradient-vibrant mb-2">Asset Heaven</h1>
-          <h2 className="text-2xl font-bold text-gray-800">{content.title}</h2>
-          <p className="mt-3 text-gray-600 font-medium">{content.description}</p>
+          <h2 className="text-2xl font-bold text-foreground">{content.title}</h2>
+          <p className="mt-3 text-secondary font-medium">{content.description}</p>
         </div>
 
-        <form className="mt-8 space-y-5 bg-white p-8 rounded-2xl shadow-vibrant-lg border-2 border-lime/20" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-5 bg-surface p-8 rounded-2xl shadow-vibrant-lg border-2 border-lime/20" onSubmit={handleSubmit}>
           {(isLogin || view === 'forgot-password') && (
             <div>
-              <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Email address</label>
+              <label htmlFor="email" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">Email address</label>
               <input id="email" name="email" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} className={inputClassName} placeholder="Enter your admin email" />
             </div>
           )}
 
           {isLogin && (
             <div>
-              <label htmlFor="password" className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Password</label>
+              <label htmlFor="password" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">Password</label>
               <input id="password" name="password" type="password" autoComplete="current-password" required value={password} onChange={(event) => setPassword(event.target.value)} className={inputClassName} placeholder="Enter your password" />
             </div>
           )}
 
           {view === 'verify-otp' && (
             <div>
-              <label htmlFor="otp" className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">One-time password</label>
+              <label htmlFor="otp" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">One-time password</label>
               <input id="otp" name="otp" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" minLength={6} maxLength={6} required value={otp} onChange={(event) => setOtp(event.target.value.replace(/\D/g, '').slice(0, 6))} className={inputClassName} placeholder="Enter 6-digit OTP" />
             </div>
           )}
@@ -121,25 +123,25 @@ export default function LoginPage() {
           {view === 'reset-password' && (
             <>
               <div>
-                <label htmlFor="new-password" className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">New password</label>
+                <label htmlFor="new-password" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">New password</label>
                 <input id="new-password" name="new-password" type="password" autoComplete="new-password" required minLength={8} value={newPassword} onChange={(event) => setNewPassword(event.target.value)} className={inputClassName} placeholder="Enter a new password" />
               </div>
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Confirm new password</label>
+                <label htmlFor="confirm-password" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">Confirm new password</label>
                 <input id="confirm-password" name="confirm-password" type="password" autoComplete="new-password" required minLength={8} value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className={inputClassName} placeholder="Re-enter the new password" />
               </div>
             </>
           )}
 
-          {error && <p role="alert" className="rounded-xl bg-red-50 p-4 border-2 border-red-300 text-sm font-semibold text-red-800">{error}</p>}
-          {notice && <p aria-live="polite" className="rounded-xl bg-green-50 p-4 border-2 border-green-300 text-sm font-semibold text-green-800">{notice}</p>}
+          {error && <p role="alert" className="rounded-xl bg-red-50 dark:bg-red-950/40 p-4 border-2 border-red-300 dark:border-red-800 text-sm font-semibold text-red-800 dark:text-red-300">{error}</p>}
+          {notice && <p aria-live="polite" className="rounded-xl bg-green-50 dark:bg-green-950/40 p-4 border-2 border-green-300 dark:border-green-800 text-sm font-semibold text-green-800 dark:text-green-300">{notice}</p>}
 
           <button type="submit" disabled={loading} className="group relative w-full flex justify-center py-3 px-4 border-2 border-transparent text-sm font-bold rounded-xl text-white vibrant-gradient hover:shadow-vibrant-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-vibrant">
             {loading ? 'Please wait…' : content.submitLabel}
           </button>
 
           {isLogin && <button type="button" onClick={() => changeView('forgot-password')} className="w-full text-sm font-bold text-pink hover:text-pink-dark transition-colors">Forgot password?</button>}
-          {!isLogin && <button type="button" onClick={() => changeView('login')} className="w-full text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors">Back to sign in</button>}
+          {!isLogin && <button type="button" onClick={() => changeView('login')} className="w-full text-sm font-bold text-secondary hover:text-foreground transition-colors">Back to sign in</button>}
         </form>
       </div>
     </div>

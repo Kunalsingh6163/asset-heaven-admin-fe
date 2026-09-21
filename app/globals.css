@@ -1,8 +1,47 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --canvas: #f5f5f5;
+  --surface: #ffffff;
+  --muted: #f3f4f6;
+  --hover: #e5e7eb;
+  --foreground: #1a1a1a;
+  --secondary: #606060;
+  --subtle: #737373;
+  --border: #e0e0e0;
+  --border-strong: #d0d0d0;
+}
+
+.dark {
+  color-scheme: dark;
+  --canvas: #111318;
+  --surface: #1c2028;
+  --muted: #252a34;
+  --hover: #343b48;
+  --foreground: #f3f4f6;
+  --secondary: #c4c9d4;
+  --subtle: #9ca5b5;
+  --border: #343b48;
+  --border-strong: #505a6c;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-muted: var(--muted);
+  --color-hover: var(--hover);
+  --color-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+}
+
 /* Custom Color Palette */
 @theme {
-  --color-*: initial;
   
   /* Vibrant Theme Colors */
   --color-lime: #b5f55b;
@@ -42,12 +81,14 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background-color: var(--canvas);
+  color: var(--foreground);
 }
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -62,7 +103,7 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: #fafafa;
+  background: var(--canvas);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -154,4 +195,32 @@ button {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.route-message {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.route-message h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.route-message p {
+  color: var(--secondary);
+}
+
+.route-message button,
+.route-message a {
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.25rem;
 }

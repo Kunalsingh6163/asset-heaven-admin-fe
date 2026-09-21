@@ -9,6 +9,7 @@ interface UserTableProps {
   onPermanentlyDeleteUser: (userId: string) => void;
   loading?: boolean;
   deletingUserId?: string | null;
+  startIndex?: number;
 }
 
 export default function UserTable({
@@ -18,6 +19,7 @@ export default function UserTable({
   onPermanentlyDeleteUser,
   loading = false,
   deletingUserId = null,
+  startIndex = 0,
 }: UserTableProps) {
   if (loading) {
     return (
@@ -30,7 +32,7 @@ export default function UserTable({
   if (users.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 font-medium">No users found</p>
+        <p className="text-secondary font-medium">No users found</p>
       </div>
     );
   }
@@ -49,13 +51,13 @@ export default function UserTable({
   const getVerificationBadge = (verified: boolean) => {
     if (verified) {
       return (
-        <span className="px-3 py-1 text-xs font-bold rounded-full bg-green-100 text-green-800 border border-green-300">
+        <span className="px-3 py-1 text-xs font-bold rounded-full bg-green-100 dark:bg-green-950/40 text-green-800 dark:text-green-300 border border-green-300 dark:border-green-800">
           Verified
         </span>
       );
     }
     return (
-      <span className="px-3 py-1 text-xs font-bold rounded-full bg-gray-100 text-gray-700 border border-gray-300">
+      <span className="px-3 py-1 text-xs font-bold rounded-full bg-muted text-foreground border border-border-strong">
         Not Verified
       </span>
     );
@@ -64,7 +66,7 @@ export default function UserTable({
   const getAdminBadge = (isAdmin: boolean) => {
     if (isAdmin) {
       return (
-        <span className="px-3 py-1 text-xs font-bold rounded-full bg-pink/20 text-pink-dark border border-pink/40">
+        <span className="px-3 py-1 text-xs font-bold rounded-full bg-pink/20 text-pink-dark dark:text-pink-light border border-pink/40">
           Admin
         </span>
       );
@@ -79,52 +81,52 @@ export default function UserTable({
   return (
     <div className="overflow-x-auto rounded-xl border-2 border-lime/20">
       <table className="min-w-full divide-y-2 divide-lime/20">
-        <thead className="bg-gradient-to-r from-gray-50 to-white">
+        <thead className="bg-gradient-to-r from-canvas to-surface">
           <tr>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               #
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Name
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Email
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Auth Method
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Email Verified
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Role
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Created At
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        <tbody className="bg-surface divide-y divide-border">
           {users.map((user, index) => (
-            <tr key={user._id} className="hover:bg-gray-50 transition-all">
+            <tr key={user._id} className="hover:bg-canvas transition-all">
               <td className="px-6 py-5 whitespace-nowrap">
                 <div className="text-base font-bold text-gradient-vibrant">
-                  {index + 1}
+                  {startIndex + index + 1}
                 </div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-base font-semibold text-gray-900">
+                <div className="text-base font-semibold text-foreground">
                   {user.name}
                 </div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-gray-600">{user.email}</div>
+                <div className="text-sm text-secondary">{user.email}</div>
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-gray-900 capitalize font-medium">
+                <div className="text-sm text-foreground capitalize font-medium">
                   {user.lastLoginMethod.replace('_', ' ')}
                 </div>
               </td>
@@ -135,7 +137,7 @@ export default function UserTable({
                 {getAdminBadge(user.admin)}
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-secondary">
                   {formatDate(user.createdAt)}
                 </div>
               </td>
@@ -149,16 +151,16 @@ export default function UserTable({
                   </button>
                   <button
                     onClick={() => onSoftDeleteUser(user._id)}
-                    disabled={deletingUserId === user._id}
-                    className="text-orange-600 hover:text-orange-800 disabled:opacity-50 font-bold transition-all px-3 py-2 rounded-lg hover:bg-orange-50 border border-orange-300 hover:border-orange-600"
+                    disabled={deletingUserId !== null}
+                    className="text-orange-600 dark:text-orange-300 hover:text-orange-800 dark:hover:text-orange-300 disabled:opacity-50 font-bold transition-all px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-950/40 border border-orange-300 dark:border-orange-800 hover:border-orange-600 dark:hover:border-orange-800"
                     title="Soft delete user"
                   >
                     {deletingUserId === user._id ? 'Deleting…' : 'Soft delete'}
                   </button>
                   <button
                     onClick={() => onPermanentlyDeleteUser(user._id)}
-                    disabled={deletingUserId === user._id}
-                    className="text-red-600 hover:text-red-800 disabled:opacity-50 font-bold transition-all px-3 py-2 rounded-lg hover:bg-red-50 border border-red-300 hover:border-red-600"
+                    disabled={deletingUserId !== null}
+                    className="text-red-600 dark:text-red-300 hover:text-red-800 dark:hover:text-red-300 disabled:opacity-50 font-bold transition-all px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/40 border border-red-300 dark:border-red-800 hover:border-red-600 dark:hover:border-red-800"
                     title="Permanently delete user"
                   >
                     Permanent delete

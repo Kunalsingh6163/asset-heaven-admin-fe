@@ -14,6 +14,17 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: `(() => {
+          let theme;
+          try { theme = localStorage.getItem('theme'); } catch {}
+          if (theme !== 'light' && theme !== 'dark') {
+            theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          document.documentElement.classList.toggle('dark', theme === 'dark');
+          document.documentElement.style.colorScheme = theme;
+        })();` }} />
+      </head>
       <body className="antialiased">
         <AppProviders>{children}</AppProviders>
       </body>

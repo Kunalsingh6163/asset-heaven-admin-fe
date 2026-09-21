@@ -71,7 +71,7 @@ export default function MutualFundsPage() {
       case 'Very High':
         return 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400';
       default:
-        return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400';
+        return 'bg-muted text-secondary ';
     }
   };
 
@@ -79,8 +79,8 @@ export default function MutualFundsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mutual Funds</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          <h1 className="text-2xl font-bold text-foreground ">Mutual Funds</h1>
+          <p className="text-sm text-subtle mt-1">
             Explore and manage mutual fund investments
           </p>
         </div>
@@ -89,11 +89,11 @@ export default function MutualFundsPage() {
           {funds.map((fund) => (
             <div
               key={fund.id}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow"
+              className="bg-surface rounded-xl p-6 shadow-md border border-border hover:shadow-lg transition-shadow"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 className="text-lg font-semibold text-foreground mb-1">
                     {fund.name}
                   </h3>
                   <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium rounded">
@@ -104,14 +104,14 @@ export default function MutualFundsPage() {
 
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">NAV</span>
-                  <span className="text-lg font-bold text-gray-900 dark:text-white">
+                  <span className="text-sm text-secondary ">NAV</span>
+                  <span className="text-lg font-bold text-foreground ">
                     {fund.nav}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Returns (1Y)</span>
+                  <span className="text-sm text-secondary ">Returns (1Y)</span>
                   <span
                     className={`text-sm font-semibold ${
                       fund.status === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
@@ -121,8 +121,8 @@ export default function MutualFundsPage() {
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Risk Level</span>
+                <div className="flex items-center justify-between pt-3 border-t border-border ">
+                  <span className="text-sm text-secondary ">Risk Level</span>
                   <span className={`px-2 py-1 text-xs font-semibold rounded ${getRiskColor(fund.risk)}`}>
                     {fund.risk}
                   </span>

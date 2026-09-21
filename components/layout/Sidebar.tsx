@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
 import { 
   HomeIcon, 
   UsersIcon, 
@@ -44,8 +43,8 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <aside 
         className={`
           fixed lg:sticky top-0 left-0 z-50 lg:z-0
-          w-64 bg-white
-          border-r-2 border-gray-200
+          w-64 bg-surface
+          border-r-2 border-border
           flex flex-col h-screen
           transition-transform duration-300 ease-in-out
           shadow-lg
@@ -53,21 +52,21 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         `}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-6 border-b-2 border-gray-200 bg-white">
+        <div className="h-16 flex items-center justify-between px-6 border-b-2 border-border bg-surface">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 vibrant-gradient rounded-lg flex items-center justify-center shadow-vibrant transform hover:scale-105 transition-transform">
               <span className="text-white font-bold text-lg">AH</span>
             </div>
             <div>
               <span className="text-lg font-bold text-gradient-vibrant block">Asset Heaven</span>
-              <span className="text-[10px] text-gray-600 uppercase tracking-wider">Admin Portal</span>
+              <span className="text-[10px] text-secondary uppercase tracking-wider">Admin Portal</span>
             </div>
           </div>
           
           {/* Close button for mobile */}
           <button
             onClick={onClose}
-            className="lg:hidden p-2 text-gray-600 hover:text-pink rounded-lg hover:bg-gray-100 transition-all"
+            className="lg:hidden p-2 text-secondary hover:text-pink rounded-lg hover:bg-muted transition-all"
           >
             <XMarkIcon className="w-5 h-5" />
           </button>
@@ -88,14 +87,14 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                   group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200
                   ${isActive 
                     ? 'vibrant-gradient text-white shadow-vibrant font-semibold transform scale-[1.02]' 
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-pink hover:pl-5'
+                    : 'text-foreground hover:bg-muted hover:text-pink hover:pl-5'
                   }
                 `}
               >
                 <Icon className={`w-5 h-5 transition-transform group-hover:scale-110 ${isActive ? 'drop-shadow-sm' : ''}`} />
                 <span className="font-medium">{item.name}</span>
                 {isActive && (
-                  <div className="ml-auto w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                  <div className="ml-auto w-2 h-2 rounded-full bg-surface animate-pulse"></div>
                 )}
               </Link>
             );
@@ -103,18 +102,18 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </nav>
 
         {/* Settings at bottom */}
-        <div className="p-4 border-t-2 border-gray-200 bg-white">
+        <div className="p-4 border-t-2 border-border bg-surface">
           <Link
             href="/dashboard/settings"
             onClick={onClose}
-            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 hover:text-lime transition-all hover:pl-5"
+            className="group flex items-center gap-3 px-4 py-3 rounded-xl text-foreground hover:bg-muted hover:text-lime transition-all hover:pl-5"
           >
             <Cog6ToothIcon className="w-5 h-5 transition-transform group-hover:rotate-90 duration-300" />
             <span className="font-medium">Settings</span>
           </Link>
           
           {/* Decorative element */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-4 pt-4 border-t border-border">
             <div className="flex items-center justify-center gap-2">
               <div className="w-20 h-[2px] bg-gradient-to-r from-transparent via-lime to-transparent"></div>
               <div className="w-2 h-2 rounded-full bg-pink"></div>
@@ -132,7 +131,7 @@ export function MobileMenuButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       onClick={onClick}
-      className="lg:hidden p-2 text-gray-600 hover:text-pink rounded-lg hover:bg-gray-100 transition-all shadow-md hover:shadow-pink"
+      className="lg:hidden p-2 text-secondary hover:text-pink rounded-lg hover:bg-muted transition-all shadow-md hover:shadow-pink"
     >
       <Bars3Icon className="w-6 h-6" />
     </button>

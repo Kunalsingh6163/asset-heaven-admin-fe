@@ -1,17 +1,12 @@
-import { configureStore } from "@reduxjs/toolkit";
-import themeReducer from "@/features/theme/themeSlice";
-import usersReducer from "@/features/users/usersSlice";
-import newsReducer from "@/features/news/newsSlice";
+import { createUsersStore } from '@/features/users/usersStore';
+import { createNewsStore } from '@/features/news/newsStore';
+import { createThemeStore } from '@/features/theme/themeStore';
 
-export const store = configureStore({
-  reducer: { 
-    theme: themeReducer,
-    users: usersReducer,
-    news: newsReducer,
-  },
-  devTools: process.env.NODE_ENV !== "production",
+// A fresh set per root provider prevents state leaking between SSR requests.
+export const createAppStores = () => ({
+  users: createUsersStore(),
+  news: createNewsStore(),
+  theme: createThemeStore(),
 });
-   
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
 
+export type AppStores = ReturnType<typeof createAppStores>;

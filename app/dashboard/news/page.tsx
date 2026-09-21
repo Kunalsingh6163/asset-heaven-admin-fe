@@ -1,28 +1,24 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { fetchAllNews, setSelectedNewsType } from '@/features/news/newsSlice';
+import { useEffect, useMemo } from 'react';
+import { useNewsStore } from '@/lib/hooks';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import NewsTable from '@/components/dashboard/NewsTable';
 
 export default function NewsPage() {
-  const dispatch = useAppDispatch();
-  const { indianNews, globalNews, loading, error, selectedNewsType } = useAppSelector(
-    (state) => state.news
-  );
-  const [searchQuery, setSearchQuery] = useState('');
+  const { indianNews, globalNews, loading, error, selectedNewsType, searchQuery,
+    fetchAllNews, setSelectedNewsType, setSearchQuery } = useNewsStore((state) => state);
 
   useEffect(() => {
-    dispatch(fetchAllNews());
-  }, [dispatch]);
+    void fetchAllNews();
+  }, [fetchAllNews]);
 
   const handleRefresh = () => {
-    dispatch(fetchAllNews());
+    void fetchAllNews(true);
   };
 
   const handleNewsTypeChange = (type: 'indian' | 'global' | 'all') => {
-    dispatch(setSelectedNewsType(type));
+    setSelectedNewsType(type);
   };
 
   // Filter and combine news based on selected type
@@ -43,7 +39,7 @@ export default function NewsPage() {
 
     // Apply search filter
     if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
+      const query = searchQuery.trim().toLowerCase();
       return combinedNews.filter(
         (article) =>
           article.title.toLowerCase().includes(query) ||
@@ -68,7 +64,7 @@ export default function NewsPage() {
             <h1 className="text-3xl font-bold text-gradient-vibrant">
               Market News & Updates
             </h1>
-            <p className="text-sm text-gray-600 mt-1 font-medium">
+            <p className="text-sm text-secondary mt-1 font-medium">
               Latest Indian and global trading market news - Total:{' '}
               <span className="text-pink font-bold">{totalNewsCount}</span>
             </p>
@@ -97,10 +93,10 @@ export default function NewsPage() {
 
         {/* Error Display */}
         {error && (
-          <div className="p-4 bg-red-50 border-2 border-red-300 rounded-xl">
+          <div className="p-4 bg-red-50 dark:bg-red-950/40 border-2 border-red-300 dark:border-red-800 rounded-xl">
             <div className="flex items-center gap-3">
               <svg
-                className="w-6 h-6 text-red-600"
+                className="w-6 h-6 text-red-600 dark:text-red-300"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -113,15 +109,15 @@ export default function NewsPage() {
                 />
               </svg>
               <div>
-                <p className="font-bold text-red-800">Error</p>
-                <p className="text-sm text-red-700">{error}</p>
+                <p className="font-bold text-red-800 dark:text-red-300">Error</p>
+                <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
               </div>
             </div>
           </div>
         )}
 
         {/* Filter and Search Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 rounded-xl border-2 border-lime/20 shadow-vibrant">
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-surface p-4 rounded-xl border-2 border-lime/20 shadow-vibrant">
           {/* News Type Filter */}
           <div className="flex gap-2">
             <button
@@ -129,7 +125,7 @@ export default function NewsPage() {
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 selectedNewsType === 'all'
                   ? 'vibrant-gradient text-white shadow-vibrant'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-muted text-foreground hover:bg-hover'
               }`}
             >
               All News ({totalNewsCount})
@@ -139,7 +135,7 @@ export default function NewsPage() {
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 selectedNewsType === 'indian'
                   ? 'lime-gradient text-white shadow-lime'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-muted text-foreground hover:bg-hover'
               }`}
             >
               Indian ({indianNews.length})
@@ -149,7 +145,7 @@ export default function NewsPage() {
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
                 selectedNewsType === 'global'
                   ? 'pink-gradient text-white shadow-pink'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  : 'bg-muted text-foreground hover:bg-hover'
               }`}
             >
               Global ({globalNews.length})
@@ -166,7 +162,7 @@ export default function NewsPage() {
               className="w-full sm:w-80 px-4 py-2 pl-10 border-2 border-lime/30 rounded-lg focus:outline-none focus:border-lime transition-all font-medium"
             />
             <svg
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-subtle"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -183,7 +179,7 @@ export default function NewsPage() {
 
         {/* News Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white p-4 rounded-xl border-2 border-lime/20 shadow-lime">
+          <div className="bg-surface p-4 rounded-xl border-2 border-lime/20 shadow-lime">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-lime/20 rounded-lg">
                 <svg
@@ -201,7 +197,7 @@ export default function NewsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">Indian Market News</p>
+                <p className="text-sm text-secondary font-medium">Indian Market News</p>
                 <p className="text-2xl font-bold text-gradient-lime">
                   {indianNews.length}
                 </p>
@@ -209,11 +205,11 @@ export default function NewsPage() {
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border-2 border-pink/20 shadow-pink">
+          <div className="bg-surface p-4 rounded-xl border-2 border-pink/20 shadow-pink">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-pink/20 rounded-lg">
                 <svg
-                  className="w-6 h-6 text-pink-dark"
+                  className="w-6 h-6 text-pink-dark dark:text-pink-light"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -227,7 +223,7 @@ export default function NewsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">Global Market News</p>
+                <p className="text-sm text-secondary font-medium">Global Market News</p>
                 <p className="text-2xl font-bold text-gradient-pink">
                   {globalNews.length}
                 </p>
@@ -235,11 +231,11 @@ export default function NewsPage() {
             </div>
           </div>
 
-          <div className="bg-white p-4 rounded-xl border-2 border-lime/20 shadow-vibrant">
+          <div className="bg-surface p-4 rounded-xl border-2 border-lime/20 shadow-vibrant">
             <div className="flex items-center gap-3">
               <div className="p-3 bg-gradient-to-br from-lime/20 to-pink/20 rounded-lg">
                 <svg
-                  className="w-6 h-6 text-gray-700"
+                  className="w-6 h-6 text-foreground"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -253,7 +249,7 @@ export default function NewsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">
+                <p className="text-sm text-secondary font-medium">
                   Showing Results
                 </p>
                 <p className="text-2xl font-bold text-gradient-vibrant">
@@ -265,7 +261,7 @@ export default function NewsPage() {
         </div>
 
         {/* News Table */}
-        <div className="bg-white rounded-2xl shadow-vibrant-lg border-2 border-lime/20 overflow-hidden">
+        <div className="bg-surface rounded-2xl shadow-vibrant-lg border-2 border-lime/20 overflow-hidden">
           <NewsTable
             news={filteredNews}
             loading={loading}

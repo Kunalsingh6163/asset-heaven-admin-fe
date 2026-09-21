@@ -6,7 +6,7 @@ A Next.js 16 administration panel for Asset Heaven. It authenticates against the
 
 - Next.js App Router + TypeScript
 - React 19
-- Redux Toolkit + React Redux for global theme state
+- Zustand for shared users, news, list preferences, and theme state
 - Tailwind CSS 4
 
 ## Project structure
@@ -14,8 +14,8 @@ A Next.js 16 administration panel for Asset Heaven. It authenticates against the
 ```text
 app/                 Routes, global layout, providers, and route fallbacks
 components/ui/       Reusable interface components
-features/theme/      Redux feature state and actions
-lib/                 Redux store and typed hooks
+features/            Zustand store factories for users, news, and theme
+lib/                 Per-provider store creation and selector hooks
 public/              Static files
 ```
 
@@ -39,9 +39,18 @@ Set `NEXT_PUBLIC_API_URL` in the frontend deployment environment **before buildi
 npm run dev
 npm run lint
 npm run test:auth
+npm run test:state
 npm run build
 npm run start
 ```
+
+## State and theme
+
+`AppProviders` creates isolated Zustand stores for each app instance. Use `useUsersStore`, `useNewsStore`, and `useThemeStore` from `lib/hooks.ts` with selectors. The dashboard and user list share one users dataset; successful deletions update that dataset immediately. List search, filters, sort, and pagination survive client navigation. Modal visibility and form inputs stay local to their components.
+
+Users and news are cached in memory for one minute; Refresh always requests new data. Duplicate pending list requests are skipped. Logout clears data and list preferences, and late responses cannot restore the previous session. Detail, list, and deletion failures have separate state.
+
+The theme uses the existing `localStorage` key `theme`, with `light` or `dark` values. It follows the system preference until a mode is chosen, synchronizes across tabs, and continues working if storage is blocked. A script applies the preference before first paint; Zustand initializes after hydration. Only the theme preference is saved to local storage. Global semantic color tokens live in `app/globals.css`; use classes such as `bg-canvas`, `bg-surface`, `text-foreground`, `text-secondary`, and `border-border` for new UI.
 
 ## API contract
 

@@ -20,7 +20,7 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
   if (news.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 font-medium">No news found</p>
+        <p className="text-secondary font-medium">No news found</p>
       </div>
     );
   }
@@ -58,7 +58,7 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
 
   const getSourceBadge = (publisher: string) => {
     return (
-      <span className="px-3 py-1 text-xs font-bold rounded-full bg-pink/20 text-pink-dark border border-pink/40">
+      <span className="px-3 py-1 text-xs font-bold rounded-full bg-pink/20 text-pink-dark dark:text-pink-light border border-pink/40">
         {publisher}
       </span>
     );
@@ -67,37 +67,37 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
   return (
     <div className="overflow-x-auto rounded-xl border-2 border-lime/20">
       <table className="min-w-full divide-y-2 divide-lime/20">
-        <thead className="bg-gradient-to-r from-gray-50 to-white">
+        <thead className="bg-gradient-to-r from-canvas to-surface">
           <tr>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               #
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Image
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Title
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Publisher
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Type
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Published
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Tickers
             </th>
-            <th className="px-6 py-5 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">
+            <th className="px-6 py-5 text-left text-sm font-bold text-foreground uppercase tracking-wider">
               Actions
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-100">
+        <tbody className="bg-surface divide-y divide-border">
           {news.map((article, index) => (
-            <tr key={`${article.uuid}-${index}`} className="hover:bg-gray-50 transition-all">
+            <tr key={`${article.uuid}-${index}`} className="hover:bg-canvas transition-all">
               <td className="px-6 py-5 whitespace-nowrap">
                 <div className="text-base font-bold text-gradient-vibrant">
                   {index + 1}
@@ -122,7 +122,7 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
                 </div>
               </td>
               <td className="px-6 py-5 max-w-md">
-                <div className="text-base font-semibold text-gray-900 line-clamp-2">
+                <div className="text-base font-semibold text-foreground line-clamp-2">
                   {article.title}
                 </div>
               </td>
@@ -133,7 +133,7 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
                 {getNewsTypeBadge(article.type)}
               </td>
               <td className="px-6 py-5 whitespace-nowrap">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-secondary">
                   {formatDate(article.publishedAt)}
                 </div>
               </td>
@@ -143,16 +143,16 @@ export default function NewsTable({ news, loading = false }: NewsTableProps) {
                     article.relatedTickers.slice(0, 3).map((ticker, idx) => (
                       <span
                         key={idx}
-                        className="px-2 py-1 text-xs font-bold rounded bg-gray-100 text-gray-700 border border-gray-300"
+                        className="px-2 py-1 text-xs font-bold rounded bg-muted text-foreground border border-border-strong"
                       >
                         {ticker}
                       </span>
                     ))
                   ) : (
-                    <span className="text-xs text-gray-400">No tickers</span>
+                    <span className="text-xs text-subtle">No tickers</span>
                   )}
                   {article.relatedTickers && article.relatedTickers.length > 3 && (
-                    <span className="px-2 py-1 text-xs font-bold rounded bg-gray-100 text-gray-700">
+                    <span className="px-2 py-1 text-xs font-bold rounded bg-muted text-foreground">
                       +{article.relatedTickers.length - 3}
                     </span>
                   )}
