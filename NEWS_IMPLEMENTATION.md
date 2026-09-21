@@ -5,15 +5,15 @@ Successfully integrated two news APIs into the Asset Heaven Admin dashboard with
 
 ## API Endpoints Integrated
 
-### 1. Market News API
+### 1. Indian Market News API
 - **Endpoint**: `https://mobulous-tech.vercel.app/api/market-news`
 - **Method**: GET
-- **Description**: Fetches general stock market news
+- **Description**: Fetches Indian trading market news
 
-### 2. Live Trading News API
-- **Endpoint**: `https://mobulous-tech.vercel.app/api/market-news/live`
+### 2. Global Market News API
+- **Endpoint**: `https://mobulous-tech.vercel.app/api/market-news/global`
 - **Method**: GET
-- **Description**: Fetches live trading news and updates
+- **Description**: Fetches global trading market news
 
 ## Files Created/Modified
 
@@ -25,11 +25,11 @@ Successfully integrated two news APIs into the Asset Heaven Admin dashboard with
 
 2. **`services/api/newsService.ts`**
    - Service layer for API calls
-   - Functions: `getMarketNews()`, `getLiveNews()`, `getAllNews()`
+   - Functions: `getIndianNews()`, `getGlobalNews()`, `getAllNews()`
 
 3. **`features/news/newsSlice.ts`**
    - Redux slice for news state management
-   - Async thunks: `fetchMarketNews`, `fetchLiveNews`, `fetchAllNews`
+   - Async thunks: `fetchIndianNews`, `fetchGlobalNews`, `fetchAllNews`
    - Actions: `setSelectedNewsType`, `clearNewsError`
 
 4. **`components/dashboard/NewsTable.tsx`**
@@ -59,7 +59,7 @@ Successfully integrated two news APIs into the Asset Heaven Admin dashboard with
      - Vibrant gradient headers (lime/pink theme)
      - Loading states with animated spinner
      - Error handling with styled alerts
-     - Filter buttons (All/Market/Live)
+     - Filter buttons (All/Indian/Global)
      - Search functionality (title, publisher, ticker)
      - Stats cards showing counts
      - Refresh button
@@ -91,8 +91,8 @@ Successfully integrated two news APIs into the Asset Heaven Admin dashboard with
    - All use vibrant theme colors
 
 3. **Stats Cards**
-   - Market News count (lime themed)
-   - Live News count (pink themed)
+   - Indian Market News count (lime themed)
+   - Global Market News count (pink themed)
    - Showing Results count (vibrant themed)
    - Icons with colored backgrounds
 
@@ -108,14 +108,14 @@ Successfully integrated two news APIs into the Asset Heaven Admin dashboard with
 ## Features
 
 ### 1. Data Fetching
-- Fetches both market and live news on page load
+- Fetches both Indian and global market news on page load
 - Combines and sorts by publish date
 - Error handling with user-friendly messages
 
 ### 2. Filtering
-- **All News**: Shows combined market + live news
-- **Market**: Shows only market news
-- **Live**: Shows only live trading news
+- **All News**: Shows combined Indian + global market news
+- **Indian**: Shows only Indian market news
+- **Global**: Shows only global market news
 
 ### 3. Search
 - Search across:

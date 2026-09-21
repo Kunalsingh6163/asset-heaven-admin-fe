@@ -24,7 +24,8 @@ class UserService {
 
     if (!Array.isArray(users)) throw new Error('The users endpoint returned an unexpected response.');
 
-    return users;
+    // Older accounts may have no name or auth-method metadata in MongoDB.
+    return users.map(normalizeUser);
   }
 
   /**
@@ -32,7 +33,7 @@ class UserService {
    */
   async getUserById(id: string): Promise<User> {
     const response = await apiClient.get<User | ApiEnvelope<User>>(API_CONFIG.ENDPOINTS.USER_BY_ID(id));
-    return unwrapData(response.data);
+    return normalizeUser(unwrapData(response.data));
   }
 
   /** Soft-deletes a user. */
@@ -47,3 +48,12 @@ class UserService {
 }
 
 export const userService = new UserService();
+
+function normalizeUser(user: User): User {
+  return {
+    ...user,
+    name: user.name || '',
+    authMethods: Array.isArray(user.authMethods) ? user.authMethods : [],
+    lastLoginMethod: user.lastLoginMethod || '',
+  };
+}

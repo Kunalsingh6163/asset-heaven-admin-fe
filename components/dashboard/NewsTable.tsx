@@ -5,11 +5,10 @@ import Image from 'next/image';
 
 interface NewsTableProps {
   news: NewsArticle[];
-  newsType: 'market' | 'live' | 'all';
   loading?: boolean;
 }
 
-export default function NewsTable({ news, newsType, loading = false }: NewsTableProps) {
+export default function NewsTable({ news, loading = false }: NewsTableProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -98,7 +97,7 @@ export default function NewsTable({ news, newsType, loading = false }: NewsTable
         </thead>
         <tbody className="bg-white divide-y divide-gray-100">
           {news.map((article, index) => (
-            <tr key={article.uuid} className="hover:bg-gray-50 transition-all">
+            <tr key={`${article.uuid}-${index}`} className="hover:bg-gray-50 transition-all">
               <td className="px-6 py-5 whitespace-nowrap">
                 <div className="text-base font-bold text-gradient-vibrant">
                   {index + 1}

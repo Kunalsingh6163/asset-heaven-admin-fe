@@ -17,14 +17,12 @@ const getApiBaseUrl = (): string => {
   // Check if we're in browser or server
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
   
-  if (envUrl) {
-    console.log('🌐 Using API URL from environment:', envUrl);
-    return envUrl;
+  if (envUrl?.trim()) {
+    return envUrl.trim().replace(/\/+$/, '');
   }
   
   // Fallback to production URL
   const fallbackUrl = 'https://mobulous-tech.vercel.app/api';
-  console.warn('⚠️ NEXT_PUBLIC_API_URL not set, using fallback:', fallbackUrl);
   return fallbackUrl;
 };
 
@@ -36,6 +34,9 @@ export const API_CONFIG = {
     ADMIN_FORGOT_PASSWORD: '/admin/forgot-password',
     ADMIN_VERIFY_OTP: '/admin/verify-otp',
     ADMIN_RESET_PASSWORD: '/admin/reset-password',
+    REFRESH_TOKEN: '/auth/refresh-token',
+    CURRENT_USER: '/auth/me',
+    LOGOUT: '/auth/logout',
     USERS: '/admin/users',
     USER_BY_ID: (id: string) => `/admin/users/${id}`,
     SOFT_DELETE_USER: (id: string) => `/admin/users/${id}`,

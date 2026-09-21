@@ -1,13 +1,16 @@
-import { apiClient, clearAccessToken, setAccessToken } from './apiClient';
+import { apiClient } from './apiClient';
+import { clearSession, getSession, saveSession } from './session';
 import { API_CONFIG } from './config';
 
 type AdminUser = {
   admin?: boolean;
+  name?: string;
+  email?: string;
 };
 
 type LoginData = {
   accessToken?: string;
-  token?: string;
+  refreshToken?: string;
   user?: AdminUser;
 };
 
@@ -28,20 +31,39 @@ const publicRequestConfig = { skipAuth: true } as const;
 
 class AuthService {
   async login(email: string, password: string): Promise<void> {
-    clearAccessToken();
+    clearSession();
 
     const response = await apiClient.post<ApiResponse<LoginData>>(
       API_CONFIG.ENDPOINTS.ADMIN_LOGIN,
-      { email, password },
+      { email: email.trim().toLowerCase(), password },
       publicRequestConfig,
     );
-    const { accessToken, token, user } = getData(response.data);
+    const { accessToken, refreshToken, user } = getData(response.data);
     getMessage(response.data, 'Unable to sign in.');
 
-    if (!accessToken && !token) throw new Error('The login response did not include an access token.');
-    if (user?.admin === false) throw new Error('This account does not have administrator access.');
+    if (typeof accessToken !== 'string' || !accessToken || typeof refreshToken !== 'string' || !refreshToken) throw new Error('The login response did not include the required session tokens.');
+    if (user?.admin !== true) throw new Error('This account does not have administrator access.');
 
-    setAccessToken(accessToken ?? token ?? '');
+    saveSession({ accessToken, refreshToken });
+  }
+
+  async getCurrentAdmin(): Promise<AdminUser> {
+    const response = await apiClient.get<ApiResponse<AdminUser>>(API_CONFIG.ENDPOINTS.CURRENT_USER);
+    const user = getData(response.data);
+    if (user.admin !== true) {
+      clearSession();
+      throw new Error('This account does not have administrator access.');
+    }
+    return user;
+  }
+
+  async logout(): Promise<void> {
+    const session = getSession();
+    try {
+      if (session) await apiClient.post(API_CONFIG.ENDPOINTS.LOGOUT, { refreshToken: session.refreshToken });
+    } finally {
+      clearSession();
+    }
   }
 
   async requestPasswordReset(email: string): Promise<string> {

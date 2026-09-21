@@ -2,68 +2,47 @@ import { NewsApiResponse } from '@/types/news.types';
 
 const NEWS_BASE_URL = 'https://mobulous-tech.vercel.app/api/market-news';
 
+async function fetchNews(url: string, market: string): Promise<NewsApiResponse> {
+  const response = await fetch(url, { cache: 'no-store' });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${market} news: ${response.status} ${response.statusText}`);
+  }
+
+  const data: NewsApiResponse = await response.json();
+  if (!data.success || !Array.isArray(data.data)) {
+    throw new Error(data.message || `Failed to fetch ${market} news`);
+  }
+
+  return data;
+}
+
 export const newsService = {
   /**
-   * Fetch market news
+   * Fetch Indian trading market news
    */
-  async getMarketNews(): Promise<NewsApiResponse> {
-    try {
-      const response = await fetch(NEWS_BASE_URL, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch market news: ${response.statusText}`);
-      }
-
-      const data: NewsApiResponse = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching market news:', error);
-      throw error;
-    }
+  async getIndianNews(): Promise<NewsApiResponse> {
+    return fetchNews(NEWS_BASE_URL, 'Indian market');
   },
 
   /**
-   * Fetch live trading news
+   * Fetch global trading market news
    */
-  async getLiveNews(): Promise<NewsApiResponse> {
-    try {
-      const response = await fetch(`${NEWS_BASE_URL}/live`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch live news: ${response.statusText}`);
-      }
-
-      const data: NewsApiResponse = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching live news:', error);
-      throw error;
-    }
+  async getGlobalNews(): Promise<NewsApiResponse> {
+    return fetchNews(`${NEWS_BASE_URL}/global`, 'global market');
   },
 
   /**
-   * Fetch all news (both market and live)
+   * Fetch both Indian and global market news
    */
-  async getAllNews(): Promise<{ marketNews: NewsApiResponse; liveNews: NewsApiResponse }> {
+  async getAllNews(): Promise<{ indianNews: NewsApiResponse; globalNews: NewsApiResponse }> {
     try {
-      const [marketNews, liveNews] = await Promise.all([
-        this.getMarketNews(),
-        this.getLiveNews(),
+      const [indianNews, globalNews] = await Promise.all([
+        this.getIndianNews(),
+        this.getGlobalNews(),
       ]);
 
-      return { marketNews, liveNews };
+      return { indianNews, globalNews };
     } catch (error) {
       console.error('Error fetching all news:', error);
       throw error;

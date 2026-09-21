@@ -10,15 +10,15 @@ export interface NewsArticle {
     width: number;
     height: number;
     tag: string;
-  };
+  } | null;
   relatedTickers?: string[];
 }
 
 export interface NewsMeta {
-  query: string;
-  symbols: string[];
+  feed: string;
+  scope: string;
+  providerRegion: string;
   queries: string[];
-  effectiveRegions: string[];
   fallbackUsed: boolean;
 }
 
@@ -35,9 +35,9 @@ export interface NewsApiResponse {
 }
 
 export interface NewsState {
-  marketNews: NewsArticle[];
-  liveNews: NewsArticle[];
+  indianNews: NewsArticle[];
+  globalNews: NewsArticle[];
   loading: boolean;
   error: string | null;
-  selectedNewsType: 'market' | 'live' | 'all';
+  selectedNewsType: 'indian' | 'global' | 'all';
 }

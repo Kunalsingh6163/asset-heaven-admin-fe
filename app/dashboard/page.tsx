@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { userService } from "@/services/api/userService";
-import router from "next/dist/client/router";
+import { useRouter } from "next/navigation";
 
 interface DashboardStats {
   totalUsers: number;
@@ -12,6 +12,7 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<DashboardStats>({
     totalUsers: 0,
     verifiedUsers: 0,
@@ -21,34 +22,21 @@ export default function DashboardPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Fetch users from API
-      const users = await userService.getAllUsers();
-
-      // Calculate statistics
-      const totalUsers = users.length;
-      const verifiedUsers = users.filter((u) => u.isEmailVerified).length;
-      const adminUsers = users.filter((u) => u.admin).length;
-
+    let active = true;
+    userService.getAllUsers().then((users) => {
+      if (!active) return;
       setStats({
-        totalUsers,
-        verifiedUsers,
-        adminUsers,
+        totalUsers: users.length,
+        verifiedUsers: users.filter((u) => u.isEmailVerified).length,
+        adminUsers: users.filter((u) => u.admin).length,
       });
-    } catch (err) {
-      setError("Failed to load dashboard data");
-      console.error("Error fetching dashboard data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    }).catch((err: unknown) => {
+      if (active) setError(err instanceof Error ? err.message : "Failed to load dashboard data");
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => { active = false; };
+  }, []);
 
   const handlealluser = () => {
     router.push("/dashboard/users");

@@ -64,6 +64,7 @@ const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {
+    resetUsers: () => initialState,
     clearSelectedUser: (state) => {
       state.selectedUser = null;
     },
@@ -137,5 +138,5 @@ const usersSlice = createSlice({
   },
 });
 
-export const { clearSelectedUser, clearError } = usersSlice.actions;
+export const { clearSelectedUser, clearError, resetUsers } = usersSlice.actions;
 export default usersSlice.reducer;

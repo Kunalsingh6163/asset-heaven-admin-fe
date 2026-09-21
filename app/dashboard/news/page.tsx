@@ -8,7 +8,7 @@ import NewsTable from '@/components/dashboard/NewsTable';
 
 export default function NewsPage() {
   const dispatch = useAppDispatch();
-  const { marketNews, liveNews, loading, error, selectedNewsType } = useAppSelector(
+  const { indianNews, globalNews, loading, error, selectedNewsType } = useAppSelector(
     (state) => state.news
   );
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +21,7 @@ export default function NewsPage() {
     dispatch(fetchAllNews());
   };
 
-  const handleNewsTypeChange = (type: 'market' | 'live' | 'all') => {
+  const handleNewsTypeChange = (type: 'indian' | 'global' | 'all') => {
     dispatch(setSelectedNewsType(type));
   };
 
@@ -29,13 +29,13 @@ export default function NewsPage() {
   const filteredNews = useMemo(() => {
     let combinedNews = [];
 
-    if (selectedNewsType === 'market') {
-      combinedNews = marketNews;
-    } else if (selectedNewsType === 'live') {
-      combinedNews = liveNews;
+    if (selectedNewsType === 'indian') {
+      combinedNews = indianNews;
+    } else if (selectedNewsType === 'global') {
+      combinedNews = globalNews;
     } else {
       // Combine both and sort by published date
-      combinedNews = [...marketNews, ...liveNews].sort(
+      combinedNews = [...indianNews, ...globalNews].sort(
         (a, b) =>
           new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
       );
@@ -55,9 +55,9 @@ export default function NewsPage() {
     }
 
     return combinedNews;
-  }, [marketNews, liveNews, selectedNewsType, searchQuery]);
+  }, [indianNews, globalNews, selectedNewsType, searchQuery]);
 
-  const totalNewsCount = marketNews.length + liveNews.length;
+  const totalNewsCount = indianNews.length + globalNews.length;
 
   return (
     <DashboardLayout>
@@ -69,7 +69,7 @@ export default function NewsPage() {
               Market News & Updates
             </h1>
             <p className="text-sm text-gray-600 mt-1 font-medium">
-              Latest stock market news and live trading updates - Total:{' '}
+              Latest Indian and global trading market news - Total:{' '}
               <span className="text-pink font-bold">{totalNewsCount}</span>
             </p>
           </div>
@@ -135,24 +135,24 @@ export default function NewsPage() {
               All News ({totalNewsCount})
             </button>
             <button
-              onClick={() => handleNewsTypeChange('market')}
+              onClick={() => handleNewsTypeChange('indian')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                selectedNewsType === 'market'
+                selectedNewsType === 'indian'
                   ? 'lime-gradient text-white shadow-lime'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Market ({marketNews.length})
+              Indian ({indianNews.length})
             </button>
             <button
-              onClick={() => handleNewsTypeChange('live')}
+              onClick={() => handleNewsTypeChange('global')}
               className={`px-4 py-2 rounded-lg font-semibold transition-all ${
-                selectedNewsType === 'live'
+                selectedNewsType === 'global'
                   ? 'pink-gradient text-white shadow-pink'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
             >
-              Live ({liveNews.length})
+              Global ({globalNews.length})
             </button>
           </div>
 
@@ -201,9 +201,9 @@ export default function NewsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">Market News</p>
+                <p className="text-sm text-gray-600 font-medium">Indian Market News</p>
                 <p className="text-2xl font-bold text-gradient-lime">
-                  {marketNews.length}
+                  {indianNews.length}
                 </p>
               </div>
             </div>
@@ -227,9 +227,9 @@ export default function NewsPage() {
                 </svg>
               </div>
               <div>
-                <p className="text-sm text-gray-600 font-medium">Live News</p>
+                <p className="text-sm text-gray-600 font-medium">Global Market News</p>
                 <p className="text-2xl font-bold text-gradient-pink">
-                  {liveNews.length}
+                  {globalNews.length}
                 </p>
               </div>
             </div>
@@ -268,7 +268,6 @@ export default function NewsPage() {
         <div className="bg-white rounded-2xl shadow-vibrant-lg border-2 border-lime/20 overflow-hidden">
           <NewsTable
             news={filteredNews}
-            newsType={selectedNewsType}
             loading={loading}
           />
         </div>

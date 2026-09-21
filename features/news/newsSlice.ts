@@ -1,39 +1,39 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { NewsState, NewsArticle } from '@/types/news.types';
-import { newsService } from '@/services/api';
+import { NewsState } from '@/types/news.types';
+import { newsService } from '@/services/api/newsService';
 
 const initialState: NewsState = {
-  marketNews: [],
-  liveNews: [],
+  indianNews: [],
+  globalNews: [],
   loading: false,
   error: null,
   selectedNewsType: 'all',
 };
 
 // Async thunks
-export const fetchMarketNews = createAsyncThunk(
-  'news/fetchMarketNews',
+export const fetchIndianNews = createAsyncThunk(
+  'news/fetchIndianNews',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await newsService.getMarketNews();
+      const response = await newsService.getIndianNews();
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to fetch market news'
+        error instanceof Error ? error.message : 'Failed to fetch Indian market news'
       );
     }
   }
 );
 
-export const fetchLiveNews = createAsyncThunk(
-  'news/fetchLiveNews',
+export const fetchGlobalNews = createAsyncThunk(
+  'news/fetchGlobalNews',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await newsService.getLiveNews();
+      const response = await newsService.getGlobalNews();
       return response.data;
     } catch (error) {
       return rejectWithValue(
-        error instanceof Error ? error.message : 'Failed to fetch live news'
+        error instanceof Error ? error.message : 'Failed to fetch global market news'
       );
     }
   }
@@ -45,8 +45,8 @@ export const fetchAllNews = createAsyncThunk(
     try {
       const response = await newsService.getAllNews();
       return {
-        marketNews: response.marketNews.data,
-        liveNews: response.liveNews.data,
+        indianNews: response.indianNews.data,
+        globalNews: response.globalNews.data,
       };
     } catch (error) {
       return rejectWithValue(
@@ -60,7 +60,7 @@ const newsSlice = createSlice({
   name: 'news',
   initialState,
   reducers: {
-    setSelectedNewsType: (state, action: { payload: 'market' | 'live' | 'all' }) => {
+    setSelectedNewsType: (state, action: { payload: 'indian' | 'global' | 'all' }) => {
       state.selectedNewsType = action.payload;
     },
     clearNewsError: (state) => {
@@ -68,32 +68,32 @@ const newsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch Market News
+    // Fetch Indian Market News
     builder
-      .addCase(fetchMarketNews.pending, (state) => {
+      .addCase(fetchIndianNews.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchMarketNews.fulfilled, (state, action) => {
+      .addCase(fetchIndianNews.fulfilled, (state, action) => {
         state.loading = false;
-        state.marketNews = action.payload;
+        state.indianNews = action.payload;
       })
-      .addCase(fetchMarketNews.rejected, (state, action) => {
+      .addCase(fetchIndianNews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
 
-    // Fetch Live News
+    // Fetch Global Market News
     builder
-      .addCase(fetchLiveNews.pending, (state) => {
+      .addCase(fetchGlobalNews.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchLiveNews.fulfilled, (state, action) => {
+      .addCase(fetchGlobalNews.fulfilled, (state, action) => {
         state.loading = false;
-        state.liveNews = action.payload;
+        state.globalNews = action.payload;
       })
-      .addCase(fetchLiveNews.rejected, (state, action) => {
+      .addCase(fetchGlobalNews.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });
@@ -106,8 +106,8 @@ const newsSlice = createSlice({
       })
       .addCase(fetchAllNews.fulfilled, (state, action) => {
         state.loading = false;
-        state.marketNews = action.payload.marketNews;
-        state.liveNews = action.payload.liveNews;
+        state.indianNews = action.payload.indianNews;
+        state.globalNews = action.payload.globalNews;
       })
       .addCase(fetchAllNews.rejected, (state, action) => {
         state.loading = false;

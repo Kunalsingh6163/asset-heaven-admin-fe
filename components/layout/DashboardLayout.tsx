@@ -5,7 +5,7 @@ import Sidebar, { MobileMenuButton } from './Sidebar';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useRouter } from 'next/navigation';
 import { BellIcon, UserCircleIcon } from '@heroicons/react/24/outline';
-import { clearAccessToken } from '@/services/api/apiClient';
+import { authService } from '@/services/api/authService';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -15,10 +15,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
-  const handleLogout = () => {
-    clearAccessToken();
-    sessionStorage.removeItem('isAdminAuthenticated');
-    router.push('/login');
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // Local session is still cleared if the backend is unavailable.
+    } finally {
+      router.replace('/login');
+    }
   };
 
   return (

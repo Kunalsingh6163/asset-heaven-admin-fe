@@ -42,8 +42,7 @@ export default function LoginPage() {
     try {
       if (view === 'login') {
         await authService.login(email, password);
-        sessionStorage.setItem('isAdminAuthenticated', 'true');
-        router.push('/dashboard');
+        router.replace('/dashboard/users');
         return;
       }
 
